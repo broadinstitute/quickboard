@@ -339,8 +339,8 @@ Our hierarchy now looks like:
 ```
 ├─ Quickboard
 |    ├─ Sidebar
-|    |    ├─ DataFilterChecklist (Sidebar Plugin)
 |    ├─ BaseTab
+|    |    ├─ DataFilterChecklist (Sidebar Plugin)
 |    |    ├─ ContentGrid
 |    |    |    ├─ PlotPanel (1)
 |    |    |    |    ├─ DataFilterChecklist (1)
