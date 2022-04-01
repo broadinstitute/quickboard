@@ -1,0 +1,14 @@
+label	size	weight	day	batch
+a	2	4.04	Mon	batch2
+b	3	5.64	Wed	batch2
+c	1	6.61	Wed	batch2
+d	3	2.54	Wed	batch1
+e	5	4.29	Wed	batch2
+f	3	2.1	Fri	batch2
+g	2	4.83	Fri	batch1
+h	5	4.79	Fri	batch1
+i	1	2.54	Wed	batch1
+j	5	2.46	Wed	batch1
+k	3	2.15	Mon	batch1
+l	5	4.5	Fri	batch1
+m	3	6.34	Fri	batch2
