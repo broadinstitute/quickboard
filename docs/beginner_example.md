@@ -23,6 +23,8 @@ Let's generate some data to use for our board. Here are some code blocks to crea
 
 First we have `data_a.tsv`, generated with:
 ```
+import pandas as pd
+
 data_a = pd.DataFrame({'label': ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']})
 data_a['size'] = np.random.choice(range(1,6), len(data_a))
 data_a['weight'] = 5 * np.random.random(len(data_a)) + 2
@@ -258,7 +260,7 @@ We'll do an example of a `Sidebar` control first.
 
 #### Sidebar Plugins
 
-Because `Sidebar` controls work on the tab-level, we'll modify our code for the tab to put in a plugin. We'll ues the
+Because `Sidebar` controls work on the tab-level, we'll modify our code for the tab to put in a plugin. We'll use the
 `DataFilterChecklist` plugin to demonstrate the idea.
 
 ```
@@ -346,7 +348,7 @@ Our hierarchy now looks like:
 |    |    |    |    ├─ DataFilterChecklist (2)
 ```
 
-As the input name `plugins` implies, we can add as many as we like. In fact, the square holding the plugins is just
+As the input name `plugins` implies, we can add as many as we like. In fact, the box holding the plugins is just
 another `ContentGrid`! You can control the column wrapping through the `plugin_wrap` input, which also defaults to `2`.
 
 Let's add one more plugin to finish off this tab. Right now, the bar chart plots the `size` column against the `label`.
@@ -447,8 +449,8 @@ Here is what the hierarchy looks like at the very end:
 ```
 ├─ Quickboard
 |    ├─ Sidebar
-|    |    ├─ DataFilterChecklist (Sidebar Plugin)
 |    ├─ BaseTab (A)
+|    |    ├─ DataFilterChecklist (Sidebar Plugin)
 |    |    ├─ ContentGrid
 |    |    |    ├─ PlotPanel (1)
 |    |    |    |    ├─ DataFilterChecklist (1)
