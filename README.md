@@ -1,10 +1,10 @@
 # Quickboard
-___
+
 #### *A simple Python package for creating quick, modular dashboards*
 
 
 ## Overview
-___
+
 Quickboard is a collection of Python classes and utilities for making scalable dashboards. Built on top of 
 [Dash](https://github.com/plotly/dash) and [Plotly](https://github.com/plotly/plotly.py), Quickboard provides
 an assortment of tools and pre-made components to mix and match, achieving a balance between ease-of-use and
@@ -22,7 +22,6 @@ The Quickboard package contains three subpackages of interest for developing das
 More details on using these can be found below.
 
 ## Usage
-___
 
 Once you have some datasets you'd like to visualize and present with a dashboard, you can start making
 Quickboard components to achieve this purpose. The general layout of a Quickboard consists of:
