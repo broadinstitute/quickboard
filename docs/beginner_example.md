@@ -23,6 +23,7 @@ Let's generate some data to use for our board. Here are some code blocks to crea
 
 First we have `data_a.tsv`, generated with:
 ```
+import numpy as np
 import pandas as pd
 
 data_a = pd.DataFrame({'label': ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']})
