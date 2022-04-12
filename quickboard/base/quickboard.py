@@ -87,7 +87,7 @@ class Quickboard:
                 Input(self.html_id + '_Tabs', 'value')
             )(self.set_tab)
 
-        # Add calback for managing sidebar layout per tab
+        # Add callback for managing sidebar layout per tab
             app.callback(
                 Output(self.sidebar.html_id + '_Container', 'children'),
                 Input(self.html_id + '_Tabs', 'value')
@@ -96,9 +96,9 @@ class Quickboard:
         # Add callback for updating data from sidebar events
         app.callback(
             Output('data_store', 'data'),
-            [Input(self.html_id + '_Tabs', 'value'),
-             Input({'type': 'sidebar_control', 'html_id': ALL, 'parent_id': ALL}, 'value')],
-            State({'type': 'sidebar_control', 'html_id': ALL, 'parent_id': ALL}, 'id')
+            Input({'type': 'sidebar_control', 'html_id': ALL, 'parent_id': ALL}, 'value'),
+            State({'type': 'sidebar_control', 'html_id': ALL, 'parent_id': ALL}, 'id'),
+            State(self.html_id + '_Tabs', 'value'),
         )(self.update_data)
 
     def set_tab(self, tab_name):
@@ -121,7 +121,7 @@ class Quickboard:
 
         return self.sidebar.header + sidebar_layout
 
-    def update_data(self, tab_name, control_values=[], control_ids=[]):
+    def update_data(self, control_values=[], control_ids=[], tab_name=""):
         """
         Callback method handling changes in current tab data sources. Can be triggered by either:
             change in current tab;

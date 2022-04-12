@@ -12,7 +12,7 @@ customizability.
 
 The following example was made using Quickboard.
 
-![An example screenshot](docs/images/README_example.jpg "All tabs are automatically scrollable!")
+![An example screenshot](https://github.com/broadinstitute/quickboard/raw/main/docs/images/README_example.jpg "All tabs are automatically scrollable!")
 
 The Quickboard package contains three subpackages of interest for developing dashboards:
 * base - the core components used to make the backbone of the dashboard,
@@ -36,4 +36,4 @@ primary data displays, updatable via the sidebar plugins and other panel specifi
 
 Understanding how to compose and mix these components will allow for a huge variety in producible dashboards. For more
 info on how to use them, check out the docstrings (e.g. `help(ContentGrid)`) or see the 
-[Guided Example](docs/beginner_example.md).
+[Guided Example](https://github.com/broadinstitute/quickboard/blob/main/docs/beginner_example.md).
