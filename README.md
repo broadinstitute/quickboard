@@ -19,7 +19,15 @@ The Quickboard package contains three subpackages of interest for developing das
 * plugins - highly customizable add-ons to augment your other components,
 * textboxes - components for having dynamically updated text.
 
-More details on using these can be found below.
+More details on using these can be found [below](#usage).
+
+## Install Guide
+
+To install, simply run
+```
+pip install quickboard
+```
+in your virtual environment.
 
 ## Usage
 
