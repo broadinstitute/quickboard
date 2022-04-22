@@ -45,8 +45,6 @@ class PlotPanel(DynamicPanel):
             Output(self.graph, 'figure'),
             Input('data_store', 'data'),
             [Input(x.control, 'value') for x in self.plugins if hasattr(x, 'control')]
-            # Input({'type': 'plot_control', 'html_id': ALL, 'parent_id': self.html_id}, 'value'),
-            # State({'type': 'plot_control', 'html_id': ALL, 'parent_id': self.html_id}, 'id')
         )(self.make_plot)
 
     def make_plot(self, data_state, *control_values):

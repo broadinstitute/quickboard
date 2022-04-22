@@ -9,11 +9,10 @@ class PlotInputRadioButtons(ControlPlugin):
     the selection via radio buttons.
     Inputs:
         header = header text/object
-        control_type = must be either 'plot_control', 'data_control', or 'sidebar_control' depending on where it appears
         plot_input = name of the PlotPanel's plotter input to be changed by clicking the radio buttons
         data_values = list of possible values to populate the radio button list
     """
-    def __init__(self, header, control_type, plot_input, data_values):
+    def __init__(self, header, plot_input, data_values):
         self.plot_input = plot_input
         component = dcc.RadioItems
         component_inputs = {
@@ -27,7 +26,6 @@ class PlotInputRadioButtons(ControlPlugin):
 
         super().__init__(
             header=header,
-            control_type=control_type,
             component=component,
             component_inputs=component_inputs
         )

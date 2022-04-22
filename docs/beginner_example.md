@@ -272,7 +272,6 @@ TabA = qbb.BaseTab(
     sidebar_plugins=[   # List of plugin objects to populate the sidebar while on this tab
         plg.DataFilterChecklist(
             header='Toggle Including Days',
-            control_type='sidebar_control',     # Important that this be filled as so, since this plugin is in the sidebar
             data_col='day',     # Name of the column we want to filter based on checked items
             data_values=['Mon', 'Wed', 'Fri']    # List of column values to put in the checklist
         )
@@ -309,7 +308,6 @@ LabelBarPlot = qbb.PlotPanel(
     plugins=[     # Notice we use just "plugins" now
         plg.DataFilterChecklist(
             header='Toggle Including Days',
-            control_type='plot_control',     # Important that this be filled as so, since this plugin controls a plot
             data_col='day',     
             data_values=['Mon', 'Wed', 'Fri']    # List of column values to put in the checklist
         )
@@ -320,8 +318,7 @@ LabelBarPlot = qbb.PlotPanel(
 
 You can rerun the code and see what appears. There's now a similar checklist below the plot, and has similar power over
 filtering the data, but just for that plot. If you restrict on both the sidebar and the plot plugins, you'll get the
-intersection of both control effects. You can add a similar control to the other plot to make it look a little nicer. Be
-sure to update the `id`'s appropriately!
+intersection of both control effects. You can add a similar control to the other plot to make it look a little nicer.
 
 ![Added some plot plugins!](images/TabA_plotplugins.jpg "Not enough days in the week...")
 
@@ -359,13 +356,11 @@ LabelBarPlot = qbb.PlotPanel(
     plugins=[
         plg.DataFilterChecklist(
             header='Toggle Including Days',
-            control_type='plot_control',
             data_col='day',     
             data_values=['Mon', 'Wed', 'Fri']
         ),
         plg.PlotInputRadioButtons(
             header='Toggle value to plot',
-            control_type='plot_control',
             plot_input='y',    # The key in the plot_inputs dict whose value gets updated by choice
             data_values=['size', 'weight']    # Possible options for value of plot_input to become radio buttons    
         )
@@ -465,7 +460,6 @@ SizeWeightPlot = qbb.PlotPanel(
     plugins=[
         plg.DataFilterChecklist(
             header='Toggle Including Days',
-            control_type='plot_control',
             data_col='day',
             data_values=['Mon', 'Wed', 'Fri']
         )
@@ -484,13 +478,11 @@ LabelBarPlot = qbb.PlotPanel(
     plugins=[
         plg.DataFilterChecklist(
             header='Toggle Including Days',
-            control_type='plot_control',
             data_col='day',     
             data_values=['Mon', 'Wed', 'Fri']
         ),
         plg.PlotInputRadioButtons(
             header='Toggle value to plot',
-            control_type='plot_control',
             plot_input='y',
             data_values=['size', 'weight']    
         )
@@ -516,7 +508,6 @@ TabA = qbb.BaseTab(
     sidebar_plugins=[
         plg.DataFilterChecklist(
             header='Toggle Including Days',
-            control_type='sidebar_control',
             data_col='day',
             data_values=['Mon', 'Wed', 'Fri']
         )

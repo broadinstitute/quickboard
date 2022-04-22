@@ -9,7 +9,6 @@ class DataFilterSlider(ControlPlugin):
     the range specified by the slider.
     Inputs:
         header = header text/object
-        control_type = must be either 'plot_control', 'data_control', or 'sidebar_control' depending on where it appears
         data_col = column from data to restrict values from slider; must be numerical
         slider_min = the minimal value of the slider
         slider_max = the maximal value of the slider
@@ -20,7 +19,7 @@ class DataFilterSlider(ControlPlugin):
         slider_marks = dictionary of the form `{num: label}` where position `num` on slider gets label `label`
         edges_infinite = if True, treat the edges of slider as infinite (no restriction on data when min/max)
     """
-    def __init__(self, header, control_type, data_col, slider_min, slider_max, slider_default_values, slider_step,
+    def __init__(self, header, data_col, slider_min, slider_max, slider_default_values, slider_step,
                  slider_marks={}, edges_infinite=True, **kwargs):
         self.data_col = data_col
         self.slider_min = slider_min
@@ -55,7 +54,6 @@ class DataFilterSlider(ControlPlugin):
 
         super().__init__(
             header=header,
-            control_type=control_type,
             component=component,
             component_inputs=component_inputs
         )

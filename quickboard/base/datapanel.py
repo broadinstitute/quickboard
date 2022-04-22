@@ -44,8 +44,6 @@ class DataPanel(DynamicPanel):
             Output(self.datatable, 'columns'),
             Input('data_store', 'data'),
             [Input(x.control, 'value') for x in self.plugins if hasattr(x, 'control')]
-            # Input({'type': 'data_control', 'html_id': ALL, 'parent_id': self.html_id}, 'value'),
-            # State({'type': 'data_control', 'html_id': ALL, 'parent_id': self.html_id}, 'id')
         )(self.update_table)
 
     def update_table(self, data_state, control_values=[]):

@@ -11,19 +11,15 @@ class ControlPlugin(Panel):
     Creates an HTML component representing controls for a DynamicPanel, as a plugin.
     Inputs:
         header = header text/object
-        control_type = must be one of 'plot_control' or 'sidebar_control', depending on location of plugin
         component = component from dcc or similar
         component_inputs = the inputs to set up the component
     """
 
-    def __init__(self, header, control_type, component, component_inputs, **kwargs):
+    def __init__(self, header, component, component_inputs, **kwargs):
 
-        # Calibrate header based on input and control type
+        # Calibrate header based on input
         if isinstance(header, str):
-            if control_type == 'plot_control':
-                header = html.H5(header)
-            elif control_type == 'sidebar_control':
-                header = html.H3(header)
+            header = html.H3(header)
         else:
             header = header
 

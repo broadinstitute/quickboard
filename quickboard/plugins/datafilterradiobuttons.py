@@ -9,11 +9,10 @@ class DataFilterRadioButtons(ControlPlugin):
     selected radio button value.
     Inputs:
         header = header text/object
-        control_type = must be either 'plot_control', 'data_control', or 'sidebar_control' depending on where it appears
         data_col = column from data to check for values matching button
         data_values = list of possible values to populate the radio button list
     """
-    def __init__(self, header, control_type, data_col, data_values):
+    def __init__(self, header, data_col, data_values):
         self.data_col = data_col
         component = dcc.RadioItems
         component_inputs = {
@@ -27,7 +26,6 @@ class DataFilterRadioButtons(ControlPlugin):
 
         super().__init__(
             header=header,
-            control_type=control_type,
             component=component,
             component_inputs=component_inputs
         )
