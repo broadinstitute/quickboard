@@ -8,8 +8,6 @@ class DataFilterSlider(ControlPlugin):
     A plugin for filtering data to be displayed by removing records where a certain column's value does not lie in
     the range specified by the slider.
     Inputs:
-        html_id = unique name for this component
-        parent_id = html_id of the parent object holding this plugin
         header = header text/object
         control_type = must be either 'plot_control', 'data_control', or 'sidebar_control' depending on where it appears
         data_col = column from data to restrict values from slider; must be numerical
@@ -22,8 +20,8 @@ class DataFilterSlider(ControlPlugin):
         slider_marks = dictionary of the form `{num: label}` where position `num` on slider gets label `label`
         edges_infinite = if True, treat the edges of slider as infinite (no restriction on data when min/max)
     """
-    def __init__(self, html_id, parent_id, header, control_type, data_col, slider_min, slider_max,
-                 slider_default_values, slider_step, slider_marks={}, edges_infinite=True, **kwargs):
+    def __init__(self, header, control_type, data_col, slider_min, slider_max, slider_default_values, slider_step,
+                 slider_marks={}, edges_infinite=True, **kwargs):
         self.data_col = data_col
         self.slider_min = slider_min
         self.slider_max = slider_max
@@ -56,8 +54,6 @@ class DataFilterSlider(ControlPlugin):
         }
 
         super().__init__(
-            html_id=html_id,
-            parent_id=parent_id,
             header=header,
             control_type=control_type,
             component=component,

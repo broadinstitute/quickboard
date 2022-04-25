@@ -10,15 +10,13 @@ class ControlPlugin(Panel):
     """
     Creates an HTML component representing controls for a DynamicPanel, as a plugin.
     Inputs:
-        html_id = unique name for this component
-        parent_id = required for plot controls to work; the html_id of the plot panel holding this plugin
         header = header text/object
         control_type = must be one of 'plot_control' or 'sidebar_control', depending on location of plugin
         component = component from dcc or similar
         component_inputs = the inputs to set up the component
     """
 
-    def __init__(self, html_id, parent_id, header, control_type, component, component_inputs, **kwargs):
+    def __init__(self, header, control_type, component, component_inputs, **kwargs):
 
         # Calibrate header based on input and control type
         if isinstance(header, str):
@@ -29,13 +27,6 @@ class ControlPlugin(Panel):
         else:
             header = header
 
-        self.full_html_id = {
-            'type': control_type,
-            'html_id': html_id,
-            'parent_id': parent_id
-        }
-
-        component_inputs.update({'id': self.full_html_id})
         self.control = component(**component_inputs)
         super().__init__(header=header, main_content=self.control, **kwargs)
 

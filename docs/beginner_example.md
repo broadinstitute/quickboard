@@ -109,7 +109,6 @@ object to hold the plot.
 import quickboard.base as qbb
 
 SizeWeightPlot = qbb.PlotPanel(
-    html_id='SizeWeightPlot',    # A string that is required to be different from ALL other components
     header='My Demo Scatterplot',    # A string rendered in larger text above the plot
     plotter=px.scatter,    # A function used to produce a Plotly plot
     plot_inputs={    # A dict of inputs for the plotter; compare with our example plot above
@@ -134,7 +133,6 @@ when we want to add new components.
 To do that, let's create the object and put our `SizeWeightPlot` inside:
 ```
 TabA_CG = qbb.ContentGrid(
-    html_id='TabA_CG',
     header='A Few Plots of data_a',
     entities=[    # Here we put a list of Panel's or more ContentGrid's to display inside
         SizeWeightPlot
@@ -147,7 +145,6 @@ The next layer up is the tab itself. We can use the `BaseTab` class to create th
 
 ```
 TabA = qbb.BaseTab(
-    html_id='ThisCanBeAnythingUnique',
     tab_label='Tab A',    # This is the label that appears in the tab button itself
     tab_header='The Tab For All Things data_a',    # This appears in large text at the top of the tab inside
     content_list=[     # This is a list of other components like ContentGrid's or PlotPanel's to include in the tab
@@ -202,7 +199,6 @@ another `PlotPanel`. Add this to the code block where you put the other `PlotPan
 
 ```
 LabelBarPlot = qbb.PlotPanel(
-    html_id='LabelBarPlot',
     header='A Bar Chart',
     plotter=px.bar,
     plot_inputs={
@@ -218,7 +214,6 @@ We can drop this right into the `ContentGrid` we made before. Let's modify it li
 
 ```
 TabA_CG = qbb.ContentGrid(
-    html_id='TabA_CG',
     header='A Few Plots of data_a',
     entities=[
         SizeWeightPlot,
@@ -268,7 +263,6 @@ Because `Sidebar` controls work on the tab-level, we'll modify our code for the 
 import quickboard.plugins as plg     # Note the new import!
 
 TabA = qbb.BaseTab(
-    html_id='ThisCanBeAnythingUnique',
     tab_label='Tab A',
     tab_header='The Tab For All Things data_a',
     content_list=[
@@ -277,8 +271,6 @@ TabA = qbb.BaseTab(
     sidebar_header="My First Quickboard",
     sidebar_plugins=[   # List of plugin objects to populate the sidebar while on this tab
         plg.DataFilterChecklist(
-            html_id='TabA_Sidebar_DayFilter',
-            parent_id='ThisCanBeAnythingUnique',    # As the name implies, this should match the html_id of the parent
             header='Toggle Including Days',
             control_type='sidebar_control',     # Important that this be filled as so, since this plugin is in the sidebar
             data_col='day',     # Name of the column we want to filter based on checked items
@@ -306,7 +298,6 @@ graph.
 
 ```
 LabelBarPlot = qbb.PlotPanel(
-    html_id='LabelBarPlot',
     header='A Bar Chart',
     plotter=px.bar,
     plot_inputs={
@@ -317,8 +308,6 @@ LabelBarPlot = qbb.PlotPanel(
     },
     plugins=[     # Notice we use just "plugins" now
         plg.DataFilterChecklist(
-            html_id='LabelBarPlot_DayFilter',
-            parent_id='LabelBarPlot',
             header='Toggle Including Days',
             control_type='plot_control',     # Important that this be filled as so, since this plugin controls a plot
             data_col='day',     
@@ -359,7 +348,6 @@ but instead we'll add a plugin that let's us freely toggle between these two plo
 The plugin we want here is `PlotInputRadioButtons`. Let's add it to the bar chart like so:
 ```
 LabelBarPlot = qbb.PlotPanel(
-    html_id='LabelBarPlot',
     header='A Bar Chart',
     plotter=px.bar,
     plot_inputs={
@@ -370,16 +358,12 @@ LabelBarPlot = qbb.PlotPanel(
     },
     plugins=[
         plg.DataFilterChecklist(
-            html_id='LabelBarPlot_DayFilter',
-            parent_id='LabelBarPlot',
             header='Toggle Including Days',
             control_type='plot_control',
             data_col='day',     
             data_values=['Mon', 'Wed', 'Fri']
         ),
         plg.PlotInputRadioButtons(
-            html_id='LabelBarPlot_Toggley',
-            parent_id='LabelBarPlot',
             header='Toggle value to plot',
             control_type='plot_control',
             plot_input='y',    # The key in the plot_inputs dict whose value gets updated by choice
@@ -416,7 +400,6 @@ may find it useful to declare objects for different tabs in different files, and
 
 ```
 TabB = qbb.BaseTab(
-    html_id='Quickboard_Bside',
     tab_label='Tab B',
     tab_header='The Tab For All Things data_b',
     content_list=[],     # Empty for now
@@ -471,7 +454,6 @@ from quickboard.app import start_app
 
 
 SizeWeightPlot = qbb.PlotPanel(
-    html_id='SizeWeightPlot',
     header='My Demo Scatterplot',
     plotter=px.scatter,
     plot_inputs={
@@ -482,8 +464,6 @@ SizeWeightPlot = qbb.PlotPanel(
     },
     plugins=[
         plg.DataFilterChecklist(
-            html_id='SizeWeightPlot_DayFilter',
-            parent_id='SizeWeightPlot',
             header='Toggle Including Days',
             control_type='plot_control',
             data_col='day',
@@ -493,7 +473,6 @@ SizeWeightPlot = qbb.PlotPanel(
 )
 
 LabelBarPlot = qbb.PlotPanel(
-    html_id='LabelBarPlot',
     header='A Bar Chart',
     plotter=px.bar,
     plot_inputs={
@@ -504,16 +483,12 @@ LabelBarPlot = qbb.PlotPanel(
     },
     plugins=[
         plg.DataFilterChecklist(
-            html_id='LabelBarPlot_DayFilter',
-            parent_id='LabelBarPlot',
             header='Toggle Including Days',
             control_type='plot_control',
             data_col='day',     
             data_values=['Mon', 'Wed', 'Fri']
         ),
         plg.PlotInputRadioButtons(
-            html_id='LabelBarPlot_Toggley',
-            parent_id='LabelBarPlot',
             header='Toggle value to plot',
             control_type='plot_control',
             plot_input='y',
@@ -523,7 +498,6 @@ LabelBarPlot = qbb.PlotPanel(
 )
 
 TabA_CG = qbb.ContentGrid(
-    html_id='TabA_CG',
     header='A Few Plots of data_a',
     entities=[
         SizeWeightPlot,
@@ -533,7 +507,6 @@ TabA_CG = qbb.ContentGrid(
 )
 
 TabA = qbb.BaseTab(
-    html_id='ThisCanBeAnythingUnique',
     tab_label='Tab A',
     tab_header='The Tab For All Things data_a',
     content_list=[
@@ -542,8 +515,6 @@ TabA = qbb.BaseTab(
     sidebar_header="My First Quickboard",
     sidebar_plugins=[
         plg.DataFilterChecklist(
-            html_id='TabA_Sidebar_DayFilter',
-            parent_id='ThisCanBeAnythingUnique',
             header='Toggle Including Days',
             control_type='sidebar_control',
             data_col='day',
@@ -553,7 +524,6 @@ TabA = qbb.BaseTab(
 )
 
 TabB = qbb.BaseTab(
-    html_id='Quickboard_Bside',
     tab_label='Tab B',
     tab_header='The Tab For All Things data_b',
     content_list=[],

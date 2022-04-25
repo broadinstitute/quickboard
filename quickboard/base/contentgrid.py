@@ -11,14 +11,12 @@ class ContentGrid:
     """
     An object for storing other components into a grid.
     Inputs:
-        html_id = unique name for this component
         header = header text/object
         entities = list of objects to store in the grid
         col_wrap = number of entities to display within a row
         border = boolean to determine if the grid has a surrounding border
     """
-    def __init__(self, html_id, header, entities, col_wrap=2, border=True):
-        self.html_id = html_id
+    def __init__(self, header, entities, col_wrap=2, border=True):
         self.header = html.H2(header, style=styles.CONTENT_GRID_HEADER_STYLE) if type(header) == str else header
 
         # Collect dynamic panels from all subobjects into one place

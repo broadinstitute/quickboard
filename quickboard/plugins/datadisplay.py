@@ -10,29 +10,20 @@ class DataDisplay(Panel):
     """
     A plugin for showing data beneath a DynamicPanel, with listening capabilities.
     Inputs:
-        html_id = unique name for this component
-        parent_id = html_id of the parent object holding this plugin
         header = header text/object
         data_source = key to use in tab data dictionary to get data inputs for this panel
         listen = list of control objects to get notified of changes in them
     """
-    def __init__(self, html_id, parent_id, header, data_source, listen=[], **kwargs):
+    def __init__(self, header, data_source, listen=[], **kwargs):
         # Calibrate header based on input and control type
         if isinstance(header, str):
             header = html.H5(header)
         else:
             header = header
 
-        self.full_html_id = {
-            'type': 'display_plugin',
-            'html_id': html_id,
-            'parent_id': parent_id
-        }
-
         self.data_source = data_source
 
         self.datatable = dash_table.DataTable(
-            id=html_id,
             page_action='none',
             sort_action='native',
             filter_action='native',
@@ -43,8 +34,8 @@ class DataDisplay(Panel):
         super().__init__(header=header, main_content=self.datatable, **kwargs)
 
         app.callback(
-            Output(html_id, 'data'),
-            Output(html_id, 'columns'),
+            Output(self.datatable, 'data'),
+            Output(self.datatable, 'columns'),
             Input('data_store', 'data'),
             [Input(x, 'value') for x in listen]
         )(self.update_table)

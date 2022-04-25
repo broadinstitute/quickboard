@@ -34,7 +34,6 @@ class DynamicPanel(Panel):
     """
     A template for creating larger panels holding objects which can be updated via different controls and plugins.
     Inputs:
-        html_id = unique name for this component
         header = header text/object
         main_content = main HTML object to hold
         data_source = key to use in tab data dictionary to get data inputs for this panel
@@ -43,14 +42,8 @@ class DynamicPanel(Panel):
         plugin_wrap = number of plugins to load per row underneath main object
         kwargs = extra keyword arguments become attributes of the object for extending functionality easily
     """
-    def __init__(self, html_id, header, main_content, data_source="data", body="", plugins=[], plugin_wrap=2, **kwargs):
+    def __init__(self, header, main_content, data_source="data", body="", plugins=[], plugin_wrap=2, **kwargs):
         super().__init__(header, main_content, **kwargs)
-
-        self.html_id = html_id
-        self.full_html_id = {
-            'type': 'dyanmic_panel',
-            'html_id': html_id,
-        }
         self.data_source = data_source
 
         # Keep list of self as DynamicPanel to register it with larger objects holding it for tab-level callbacks
@@ -62,12 +55,10 @@ class DynamicPanel(Panel):
         self.main_content = html.Div([main_content], style={'border-width': '1px', 'border-style': 'solid',
                                                             'border-color': 'black'})
 
-
         # Configure plugin related attributes
         self.plugins = plugins
         border = False if len(plugins) == 0 else True
-        self.plugin_frame = ContentGrid(html_id + '_PluginFrame', header="", entities=plugins,
-                                        col_wrap=plugin_wrap, border=border)
+        self.plugin_frame = ContentGrid(header="", entities=plugins, col_wrap=plugin_wrap, border=border)
 
         self.container = html.Div([
             self.header, self.body, html.Br(), self.main_content, html.Br(), self.plugin_frame.container
@@ -82,7 +73,7 @@ class DynamicPanel(Panel):
         """
         return df
 
-    def apply_transforms(self, data_state, control_values=[], control_ids=[]):
+    def apply_transforms(self, data_state, control_values=[]):
         """
         A method that is called when relevant control objects change state to manipulate data source before
         passing to the main object.
@@ -91,8 +82,8 @@ class DynamicPanel(Panel):
         df = self.data_transform(df)
 
         # Find control plugin objects corresponding to the controls for this plot panel
-        control_html_ids = [x['html_id'] for x in control_ids]
-        controls = [plugin for plugin in self.plugins if plugin.full_html_id['html_id'] in control_html_ids]
+        # control_html_ids = [x['html_id'] for x in control_ids]
+        controls = [plugin for plugin in self.plugins if hasattr(plugin, 'control')]
 
         # Apply control plugin effects
         for control, control_value in zip(controls, control_values):
