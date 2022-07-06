@@ -18,12 +18,50 @@ class Quickboard:
         sidebar_header = header text/object to use if no tabs
         sidebar_plugins = list of plugins to use in sidebar if no tabs
         tab_list = list of tab objects from which the board is comprised
-        global_contents = objects to display in the absence of tabs
+        content_list = objects to display in the absence of tabs
         data_paths = dictionary of `{tab label: paths}` where `paths` is either string or dictionary of
                     `{data source name: path}` to be reference in dynamic panels within the given tab
     """
-    def __init__(self, sidebar_header="Data Controls", sidebar_plugins=[], tab_list=[], global_contents=[],
+    def __init__(self, sidebar_header="Data Controls", sidebar_plugins=[], tab_list=[], content_list=[],
                  data_paths={}):
+        self.style = styles.CONTENT_STYLE
+        self.tabs_container = self.initialize_tabs(tab_list, data_paths)
+        self.sidebar_container = self.initialize_sidebar(sidebar_header, sidebar_plugins)
+
+        # Used in case user doesn't want to have tabs, but one page with some contents
+        self.content_list = html.Div([x.container for x in content_list])
+
+        self.container = html.Div(
+            children=[
+                self.sidebar_container,
+                self.content_list,
+                self.tabs_container
+            ],
+            style=self.style
+        )
+
+        #############
+        # CALLBACKS #
+        #############
+
+        # Add callback for tab switching
+        if len(tab_list) > 0:
+            app.callback(
+                Output(self.current_tab_content, 'children'),
+                Output(self.sidebar_container, 'children'),
+                Input(self.tabs, 'value')
+            )(self.tab_switch_update)
+
+        # Add callback for updating data from sidebar events
+        # Configure input based on whether user input tabs
+        update_data_inputs = [Input({'control_type': 'sidebar_control', 'unique_id': ALL}, 'value')]
+        update_data_inputs += [Input(self.tabs, 'value')] if tab_list else []  # add only if nonempty tab list
+        app.callback(
+            Output('data_store', 'data'),
+            update_data_inputs,
+        )(self.update_data)
+
+    def initialize_tabs(self, tab_list, data_paths):
         # Parse data paths
         self.data_paths = {}
         if isinstance(data_paths, str):
@@ -33,12 +71,6 @@ class Quickboard:
             self.data_paths = data_paths
         else:
             print("ERROR: Data paths must be either const string or dictionary of tab_label -> paths.")
-
-        if len(tab_list) != 0:
-            first_tab = tab_list[0]
-            self.sidebar = Sidebar(first_tab.sidebar_header, first_tab.sidebar_plugins)
-        else:
-            self.sidebar = Sidebar(sidebar_header, sidebar_plugins)
 
         # Collect tabs together unless user inputs none
         self.tab_list = tab_list
@@ -51,51 +83,31 @@ class Quickboard:
             self.current_tab_content = html.Div(children=html.P('If this message persists, then there was an ERROR '
                                                                 'initializing tabs!'))
 
-            self.tabs_container = html.Div(
+            self.current_tab = self.tab_list[0]
+            self.tab_dict = {
+                tab.tab_label: tab for tab in tab_list
+            }
+            tabs_container = html.Div(
                 children=[
                     self.tabs,
                     self.current_tab_content
                 ]
             )
-
-            self.current_tab = self.tab_list[0]
-            self.tab_dict = {
-                tab.tab_label: tab for tab in tab_list
-            }
-
         else:
-            self.tabs_container = html.Div([])
+            tabs_container = html.Div([])
+        return tabs_container
 
-        # Used in case user doesn't want to have tabs, but one page with global contents
-        self.global_contents = html.Div(global_contents)
-
-        self.container = html.Div(
-            children=[
-                self.sidebar.container,
-                self.global_contents,
-                self.tabs_container
-            ],
-            style=styles.CONTENT_STYLE
-        )
-
-        #############
-        # CALLBACKS #
-        #############
-
-        # Add callback for tab switching
-        if len(tab_list) > 0:
-            app.callback(
-                Output(self.current_tab_content, 'children'),
-                Output(self.sidebar.container, 'children'),
-                Input(self.tabs, 'value')
-            )(self.tab_switch_update)
-
-        # Add callback for updating data from sidebar events
-        app.callback(
-            Output('data_store', 'data'),
-            Input({'control_type': 'sidebar_control', 'unique_id': ALL}, 'value'),
-            Input(self.tabs, 'value'),
-        )(self.update_data)
+    def initialize_sidebar(self, sidebar_header, sidebar_plugins):
+        if len(self.tab_list) != 0:
+            first_tab = self.tab_list[0]
+            self.sidebar = Sidebar(first_tab.sidebar_header, first_tab.sidebar_plugins)
+            return self.sidebar.container
+        elif len(sidebar_plugins) != 0:
+            self.sidebar = Sidebar(sidebar_header, sidebar_plugins)
+            return self.sidebar.container
+        else:
+            self.style["margin-left"] = "2rem"
+            return html.Div([])
 
     def set_tab(self, tab_name):
         """
