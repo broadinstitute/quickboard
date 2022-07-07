@@ -30,6 +30,10 @@ class Quickboard:
 
         # Used in case user doesn't want to have tabs, but one page with some contents
         self.content_list = html.Div([x.container for x in content_list])
+        self.dps = []
+        for entity in content_list:
+            if hasattr(entity, 'dps'):
+                self.dps += entity.dps
 
         self.container = html.Div(
             children=[
@@ -58,6 +62,7 @@ class Quickboard:
         update_data_inputs += [Input(self.tabs, 'value')] if tab_list else []  # add only if nonempty tab list
         app.callback(
             Output('data_store', 'data'),
+            State('data_store', 'data'),
             update_data_inputs,
         )(self.update_data)
 
@@ -104,6 +109,15 @@ class Quickboard:
             return self.sidebar.container
         elif len(sidebar_plugins) != 0:
             self.sidebar = Sidebar(sidebar_header, sidebar_plugins)
+
+            # Distinguish sidebar plugins for later callback
+            for plugin in sidebar_plugins:
+                if hasattr(plugin, 'control'):
+                    plugin.control.id = {
+                        'control_type': 'sidebar_control',
+                        'unique_id': id(plugin)
+                    }
+
             return self.sidebar.container
         else:
             self.style["margin-left"] = "2rem"
@@ -135,37 +149,29 @@ class Quickboard:
 
         return [set_tab_container, updated_sidebar_layout]
 
-    def update_data(self, control_values=[], tab_name=""):
+    def update_data(self, data_state={'callback_num': 0}, control_values=[], tab_name=""):
         """
         Callback method handling changes in current tab data sources. Can be triggered by either:
             change in current tab;
             interacting with sidebar plugins.
         """
-        new_data_paths = self.data_paths[tab_name]
+        # Find control plugin objects & dynamic panels corresponding to the controls for the sidebar
+        # Split into case of 0 or more tabs and any sidebar or none
+        if tab_name != "":
+            sidebar_plugins = self.current_tab.sidebar_plugins
+            dps_list = self.current_tab.dps
+        else:
+            sidebar_plugins = self.sidebar.plugins if hasattr(self, 'sidebar') else []
+            dps_list = self.dps
 
-        # If just one string is passed for tab data, convert to simple dict for downstream compatability
-        if isinstance(new_data_paths, str):
-            new_data_paths = {'data': new_data_paths}
-
-        def df_from_path(path):
-            if path == '':
-                return pd.DataFrame({})
-            elif path.split('.')[-1] == 'tsv':
-                return pd.read_csv(path, sep='\t')
-            else:
-                return pd.read_csv(path)
-
-        # Read in dfs relevant to the current tab
-        new_dfs = {x: df_from_path(new_data_paths[x]) for x in new_data_paths}
-
-        # Find control plugin objects corresponding to the controls for the sidebar
-        controls = [plugin for plugin in self.current_tab.sidebar_plugins if hasattr(plugin, 'control')]
+        controls = [plugin for plugin in sidebar_plugins if hasattr(plugin, 'control')]
 
         # Apply control plugin effects
-        for control, value in zip(controls, control_values):
-            for data_source in new_dfs:
-                for dp in self.current_tab.dps:
-                    new_dfs[data_source] = control.configure(dp, new_dfs[data_source], value)
+        for dp in dps_list:
+            new_df = dp.data_manager.df
+            for control, value in zip(controls, control_values):
+                new_df = control.configure(dp, new_df, value)
+            dp.data_manager.sub_df = new_df
 
-        df_dicts = {x: new_dfs[x].to_dict('records') for x in new_dfs}
-        return df_dicts
+        data_state['callback_num'] = (data_state['callback_num'] + 1) % 1000
+        return data_state
