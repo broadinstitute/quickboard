@@ -1,4 +1,4 @@
-from dash import dcc
+from dash import dcc, ctx
 from dash import html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
@@ -41,16 +41,26 @@ class PlotPanel(DynamicPanel):
         )
 
         # Plot update callback
+        dm = self.data_manager
+        interactive_data = []
+        if dm.source_type == "PlotPanel":
+            graph = dm.data_source[0].graph
+            plot_data = dm.data_source[1]
+            interactive_data = Input(graph, plot_data)
+        else:
+            interactive_data = Input('data_store', 'data')
+
         app.callback(
             Output(self.graph, 'figure'),
             Input('data_store', 'data'),
+            interactive_data,
             [Input(x.control, 'value') for x in self.plugins if hasattr(x, 'control')]
         )(self.make_plot)
 
-    def make_plot(self, data_state, *control_values):
+    def make_plot(self, data_state, interactive_data, *control_values):
         """
         A method called to create the figure when the state of a control object is changed.
         """
-        df = self.apply_transforms(data_state, control_values)
+        df = self.apply_transforms(ctx, interactive_data, control_values)
         fig = self.plotter(df, **self.plot_inputs)
         return fig

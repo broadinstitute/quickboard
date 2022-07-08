@@ -58,8 +58,10 @@ class Quickboard:
 
         # Add callback for updating data from sidebar events
         # Configure input based on whether user input tabs
-        update_data_inputs = [Input({'control_type': 'sidebar_control', 'unique_id': ALL}, 'value')]
-        update_data_inputs += [Input(self.tabs, 'value')] if tab_list else []  # add only if nonempty tab list
+        update_data_inputs = Input({'control_type': 'sidebar_control', 'unique_id': ALL}, 'value')
+        if len(tab_list) > 0:
+            update_data_inputs = [update_data_inputs, Input(self.tabs, 'value')]
+
         app.callback(
             Output('data_store', 'data'),
             State('data_store', 'data'),
@@ -149,12 +151,13 @@ class Quickboard:
 
         return [set_tab_container, updated_sidebar_layout]
 
-    def update_data(self, data_state={'callback_num': 0}, control_values=[], tab_name=""):
+    def update_data(self, data_state=None, control_values=[], tab_name=""):
         """
         Callback method handling changes in current tab data sources. Can be triggered by either:
             change in current tab;
             interacting with sidebar plugins.
         """
+
         # Find control plugin objects & dynamic panels corresponding to the controls for the sidebar
         # Split into case of 0 or more tabs and any sidebar or none
         if tab_name != "":
@@ -172,6 +175,9 @@ class Quickboard:
             for control, value in zip(controls, control_values):
                 new_df = control.configure(dp, new_df, value)
             dp.data_manager.sub_df = new_df
+
+        if data_state is None:
+            data_state = {'callback_num': 0}
 
         data_state['callback_num'] = (data_state['callback_num'] + 1) % 1000
         return data_state

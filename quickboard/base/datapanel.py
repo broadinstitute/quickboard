@@ -1,4 +1,4 @@
-from dash import dcc
+from dash import dcc, ctx
 from dash import dash_table
 from dash.dependencies import Input, Output, State, ALL
 
@@ -39,18 +39,28 @@ class DataPanel(DynamicPanel):
         )
 
         # Table update callback
+        dm = self.data_manager
+        interactive_data = []
+        if dm.source_type == "PlotPanel":
+            graph = dm.data_source[0].graph
+            plot_data = dm.data_source[1]
+            interactive_data = Input(graph, plot_data)
+        else:
+            interactive_data = Input('data_store', 'data')
+
         app.callback(
             Output(self.datatable, 'data'),
             Output(self.datatable, 'columns'),
             Input('data_store', 'data'),
+            interactive_data,
             [Input(x.control, 'value') for x in self.plugins if hasattr(x, 'control')]
         )(self.update_table)
 
-    def update_table(self, data_state, control_values=[]):
+    def update_table(self, data_state, control_values=[], interactive_data={}):
         """
         A method called to populate the table when the state of a control object is changed.
         """
-        df = self.apply_transforms(data_state, control_values)
+        df = self.apply_transforms(ctx, control_values, interactive_data)
 
         data = df.to_dict('records')
         columns = [{'id': c, 'name': c} for c in df.columns]

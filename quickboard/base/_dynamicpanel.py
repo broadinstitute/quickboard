@@ -52,17 +52,27 @@ class DynamicPanel(Panel):
         """
         return df
 
-    def apply_transforms(self, data_state, control_values=[]):
+    def apply_transforms(self, context, interactive_data={}, control_values=[]):
         """
         A method that is called when relevant control objects change state to manipulate data source before
         passing to the main object.
         """
-        # df = pd.DataFrame.from_records(data_state[self.data_source])
-        df = self.data_manager.sub_df
+        dm = self.data_manager
+
+        # Get source of callback trigger
+        cb_trigger = context.triggered[0]['prop_id'].split('.')[-1]
+        plot_data_types = ['hoverData', 'clickData', 'selectedData']
+        if (dm.source_type == "PlotPanel") & (cb_trigger in plot_data_types):
+            # Case where plot data selected to trigger callback
+            indices = dm.get_interactive_indices(interactive_data)
+            target_data = dm.data_source[0].data_manager.sub_df
+            dm.df = target_data.loc[indices, :]
+            dm.sub_df = target_data.loc[indices, :]
+
+        df = dm.sub_df
         df = self.data_transform(df)
 
         # Find control plugin objects corresponding to the controls for this plot panel
-        # control_html_ids = [x['html_id'] for x in control_ids]
         controls = [plugin for plugin in self.plugins if hasattr(plugin, 'control')]
 
         # Apply control plugin effects
