@@ -8,7 +8,11 @@ from quickboard.dashsetup import app
 class DataManager:
     """
     A class for interpreting different data sources, and cleaning data into a Pandas Dataframe for use
-    by DynamicPanel objects.
+    by DynamicPanel objects. The possible types of data_source are:
+        - pandas DataFrame (loaded in memory)
+        - file path ending in .csv or .tsv (to be loaded into a DataFrame)
+        - a list with first element a PlotPanel and second element a string with value either hoverData, clickData, or
+        selectedData to be used for data generated from interacting with given PlotPanel.
     """
     def __init__(self, data_source=""):
         self.data_source = data_source
@@ -33,6 +37,7 @@ class DataManager:
 
         else:
             self.df = pd.DataFrame()
+            print("WARNING: Invalid data_source input. Please see documentation for list of valid input types.")
 
     def load_data(self):
         """
@@ -53,6 +58,8 @@ class DataManager:
 
         else:
             self.df = pd.DataFrame()
+
+        self.sub_df = self.df
 
     def get_interactive_indices(self, data):
         """

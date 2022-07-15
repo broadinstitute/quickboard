@@ -18,7 +18,8 @@ class PlotPanel(DynamicPanel):
         header = header text/object
         plotter = function which outputs a Plotly figure
         plot_inputs = dictionary of inputs which is passed to plotter to produce figure
-        data_source = key to use in tab data dictionary to get data inputs for this panel
+        data_source = where data_manager should look for data; must be either DataFrame, file path, or list of PlotPanel
+        and string of one of hoverData, clickData, or selectedData for interactive data generation
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
