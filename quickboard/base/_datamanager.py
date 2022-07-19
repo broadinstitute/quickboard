@@ -37,7 +37,7 @@ class DataManager:
 
         else:
             self.df = pd.DataFrame()
-            print("WARNING: Invalid data_source input. Please see documentation for list of valid input types.")
+            print("ERROR: Invalid data_source input. Please see documentation for list of valid input types.")
 
     def load_data(self):
         """

@@ -17,7 +17,7 @@ The following example was made using Quickboard.
 The Quickboard package contains three subpackages of interest for developing dashboards:
 * base - the core components used to make the backbone of the dashboard,
 * plugins - highly customizable add-ons to augment your other components,
-* textboxes - components for having dynamically updated text.
+* (EXPERIMENTAL) textboxes - components for having dynamically updated text.
 
 More details on using these can be found [below](#usage).
 
@@ -32,7 +32,12 @@ in your virtual environment.
 ## Usage
 
 Once you have some datasets you'd like to visualize and present with a dashboard, you can start making
-Quickboard components to achieve this purpose. The general layout of a Quickboard consists of:
+Quickboard components to achieve this purpose. Check out the [Component Gallery](docs/component_gallery.md) to see what
+you can create with just a few lines of code.
+
+Once you have a few components you'd like to put together into a larger app, or to take advantage of using tab-level
+plugin interactions, you can use a few of the other Quickboard classes to achieve this. The general layout of a full 
+Quickboard consists of:
 * a **Quickboard** object to hold everything together;
 * a (n optional) list of **BaseTab** objects to organize visuals into tabs;
 * a **Sidebar** calibrated to hold different *plugins* based on the current tab.
