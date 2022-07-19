@@ -36,8 +36,7 @@ class DataManager:
             self.source_type = "PlotPanel"
 
         else:
-            self.df = pd.DataFrame()
-            print("ERROR: Invalid data_source input. Please see documentation for list of valid input types.")
+            raise ValueError("Invalid data_source input. Please see documentation for list of valid input types.")
 
     def load_data(self):
         """
