@@ -1,9 +1,10 @@
 ## Guided Example
 
-To demonstrate how to use the Quickboard components together, let's work through a simple example. We're going to
-recreate the following board.
+This is a beginner's guide to creating a larger scale app than the examples shown in the 
+[Component Gallery](component_gallery.md). To demonstrate how to use the Quickboard components together, let's work 
+through a simple example. We're going to recreate the following board.
 
-![The finished product](images/guide_final.jpg "Look how short the code at the end is for all of this!")
+![The finished product](images/beginner_example/guide_final.jpg "Look how short the code at the end is for all of this!")
 
 In this guide, we'll run code using a Jupyter notebook. All code blocks should be thought of as cells in the notebook,
 though it should also work fine to gather the main pieces into a `.py` file and run it.
@@ -100,7 +101,7 @@ px.scatter(data_a, x='size', y='weight', color='batch', title='Size vs Weight by
 
 This should give the following plot:
 
-![A scatter plot example!](images/guide_firstplot.png "All Plotly plots are interactive automatically!")
+![A scatter plot example!](images/beginner_example/guide_firstplot.png "All Plotly plots are interactive automatically!")
 
 It's a bit wide by default, but that's OK. Let's put this plot into our board. To start, we need to make a `PlotPanel` 
 object to hold the plot. 
@@ -182,13 +183,13 @@ So how do we see it? We just need to run a certain function, with our Quickboard
 ```
 from quickboard.app import start_app
 
-start_app(board, port=8050)    # Note: The default port is 8050, but you can change this to run multiple boards at once
+start_app(board, mode="external", port=8050)    # Note: The default port is 8050, but change to run multiple boards
 ```
 
 Running this in Jupyter should output a link to `127.0.0.1:8050`. If you click the link, or go to that url in a browser
-after running in a terminal, you can finally see the board!
+after running in a terminal (with the `mode` input removed in that case), you can finally see the board!
 
-![Our first glance at what Quickboard can do!](images/TabA_firstplot.jpg "All tabs are automatically scrollable!")
+![Our first glance at what Quickboard can do!](images/beginner_example/TabA_firstplot.jpg "All tabs are automatically scrollable!")
 
 There it is! But it's still a lot of overhead for just one plot. Let's try adding some more stuff.
 
@@ -227,7 +228,7 @@ Rerun this code block and the ones following it, and run the `start_app` functio
 (Tip: If you get `Duplicate callback outputs` errors when trying to modify and rerun, try restarting the notebook 
 kernel.)
 
-![That looks better!](images/TabA_secondplot.jpg "That was easy!")
+![That looks better!](images/beginner_example/TabA_secondplot.jpg "That was easy!")
 
 This example should show some of the power of building up a board with modular components like this. An investment in 
 the higher layer objects makes it very easy to drop in new features. The new hierarchy looks like this:
@@ -281,7 +282,7 @@ TabA = qbb.BaseTab(
 
 Now when you rerun the code, you'll see our plugin on the left.
 
-![Now we've got our first plugin!](images/TabA_sidebarplugin.jpg "Unlimited power!")
+![Now we've got our first plugin!](images/beginner_example/TabA_sidebarplugin.jpg "Unlimited power!")
 
 Now our board is interactive beyond the usual Plotly capabilities. Try clicking the checklist buttons and watch the
 plots update in real time! Can you see what's happening?
@@ -320,7 +321,7 @@ You can rerun the code and see what appears. There's now a similar checklist bel
 filtering the data, but just for that plot. If you restrict on both the sidebar and the plot plugins, you'll get the
 intersection of both control effects. You can add a similar control to the other plot to make it look a little nicer.
 
-![Added some plot plugins!](images/TabA_plotplugins.jpg "Not enough days in the week...")
+![Added some plot plugins!](images/beginner_example/TabA_plotplugins.jpg "Not enough days in the week...")
 
 Our hierarchy now looks like:
 ```
@@ -380,7 +381,7 @@ myplg = plg.DataFilterChecklist(...)    # But make sure all of the id's are vali
 
 Let's add it to our code and see what we get.
 
-![We've got radio buttons!](images/TabA_radioplugin.jpg "How many possible plots can we make now by just clicking?")
+![We've got radio buttons!](images/beginner_example/TabA_radioplugin.jpg "How many possible plots can we make now by just clicking?")
 
 Now we can toggle between seeing `size` and `weight` on the y-axis with the click of a button! 
 
@@ -533,5 +534,5 @@ board = qbb.Quickboard(
     }
 )
 
-start_app(board, port=8050)
+start_app(board, mode="external", port=8050)    # Note: Remove 'mode' input if running a .py file instead of notebook
 ```

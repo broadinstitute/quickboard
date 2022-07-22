@@ -1,4 +1,4 @@
-from dash import dcc
+from dash import dcc, ctx
 from dash import dash_table
 from dash.dependencies import Input, Output, State, ALL
 
@@ -13,7 +13,8 @@ class DataPanel(DynamicPanel):
     A dynamic panel meant to hold a Dash DataTable.
     Inputs:
         header = header text/object
-        data_source = key to use in tab data dictionary to get data inputs for this panel
+        data_source = where data_manager should look for data; must be either DataFrame, file path, or list of PlotPanel
+        and string of one of hoverData, clickData, or selectedData for interactive data generation
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
@@ -39,18 +40,28 @@ class DataPanel(DynamicPanel):
         )
 
         # Table update callback
+        dm = self.data_manager
+        interactive_data = []
+        if dm.source_type == "PlotPanel":
+            graph = dm.data_source[0].graph
+            plot_data = dm.data_source[1]
+            interactive_data = Input(graph, plot_data)
+        else:
+            interactive_data = Input('data_store', 'data')
+
         app.callback(
             Output(self.datatable, 'data'),
             Output(self.datatable, 'columns'),
             Input('data_store', 'data'),
+            interactive_data,
             [Input(x.control, 'value') for x in self.plugins if hasattr(x, 'control')]
         )(self.update_table)
 
-    def update_table(self, data_state, control_values=[]):
+    def update_table(self, data_state, control_values=[], interactive_data={}):
         """
         A method called to populate the table when the state of a control object is changed.
         """
-        df = self.apply_transforms(data_state, control_values)
+        df = self.apply_transforms(ctx, control_values, interactive_data)
 
         data = df.to_dict('records')
         columns = [{'id': c, 'name': c} for c in df.columns]

@@ -12,44 +12,30 @@ class DataFilterSlider(ControlPlugin):
         data_col = column from data to restrict values from slider; must be numerical
         slider_min = the minimal value of the slider
         slider_max = the maximal value of the slider
-        slider_default_values = the value(s) the slider starts on by default; if a single number, then slider will be
-            one-sided, and data will be restricted to be less than slider value; if a pair (tuple or list) of numbers,
-            then slider will be two-sided, and data will be restricted to lie between the two values
+        slider_default_value = the value the slider starts on by default
         slider_step = controls how granular the slider will be; the minimal change in the slider value when dragging
         slider_marks = dictionary of the form `{num: label}` where position `num` on slider gets label `label`
-        edges_infinite = if True, treat the edges of slider as infinite (no restriction on data when min/max)
+        tooltip = dictionary with keys 'always_visible' (w/ value = bool) and 'placement' (w/ value = e.g. 'left',
+            'right', 'top', etc) to control if selected value should appear on hover; leave blank for no tooltip
+        updatemode = either 'mouseup' (default) or 'drag' to specify when data should be updated
     """
-    def __init__(self, header, data_col, slider_min, slider_max, slider_default_values, slider_step,
-                 slider_marks={}, edges_infinite=True, **kwargs):
+    def __init__(self, header, data_col, slider_min, slider_max, slider_default_value=None, slider_step=None,
+                 slider_marks={}, tooltip={}, updatemode='mouseup', **kwargs):
         self.data_col = data_col
         self.slider_min = slider_min
         self.slider_max = slider_max
-        self.edges_infinite = edges_infinite
 
-        try:
-            float(slider_default_values)
-            component = dcc.Slider
-        except TypeError:
-            try:
-                tuple(slider_default_values)
-                if len(slider_default_values) == 2:
-                    component = dcc.RangeSlider
-                else:
-                    print("ERROR: If using range of defaults, must input a pair.")
-            except TypeError:
-                print("ERROR: Default values must be either single number or pair of values in list/tuple.")
-
-        # If no marks provided, use the min/max values as only labels
-        if slider_marks == {}:
-            slider_marks = {slider_min: str(slider_min), slider_max: str(slider_max)}
+        component = dcc.Slider
 
         component_inputs = {
             'min': slider_min,
             'max': slider_max,
-            'value': slider_default_values,
+            'value': slider_default_value,
             'step': slider_step,
             'included': True,
-            'marks': slider_marks
+            'marks': slider_marks,
+            'tooltip': tooltip,
+            'updatemode': updatemode
         }
 
         super().__init__(
@@ -60,31 +46,8 @@ class DataFilterSlider(ControlPlugin):
 
     def data_transform(self, df, control_value):
         """
-        Filters data so given column lies within the range of the slider.
+        Filters data so given column takes value chosen from the slider.
         """
-        try:
-            # Handle case of normal one-sided slider
-            float(control_value)
-            if self.edges_infinite & (control_value == self.slider_max):
-                df = df
-            else:
-                df = df[df[self.data_col] <= control_value]
-        except TypeError:
-                try:
-                    # Handle case of two-sided slider
-                    tuple(control_value)
-                    # Left side of slider
-                    if self.edges_infinite & (control_value[0] == self.slider_min):
-                        df = df
-                    else:
-                        df = df[df[self.data_col] >= control_value[0]]
 
-                    # Right side of slider
-                    if self.edges_infinite & (control_value[1] == self.slider_max):
-                        df = df
-                    else:
-                        df = df[df[self.data_col] <= control_value[1]]
-                except TypeError:
-                    print("ERROR: Invalid control_value. Expecting single input or list/tuple of slider values.")
-
+        df = df[df[self.data_col] == control_value]
         return df

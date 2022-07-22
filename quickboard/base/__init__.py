@@ -1,5 +1,7 @@
 from .contentgrid import *
 from ._panel import *
+from ._datamanager import *
+from ._dynamicpanel import *
 from .basetab import *
 from .controlplugin import *
 from .datapanel import *
