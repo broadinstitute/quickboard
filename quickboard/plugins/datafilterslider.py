@@ -1,6 +1,6 @@
 from dash import dcc
 
-from quickboard.base import ControlPlugin
+from quickboard.primitives import ControlPlugin
 
 
 class DataFilterSlider(ControlPlugin):
@@ -21,10 +21,6 @@ class DataFilterSlider(ControlPlugin):
     """
     def __init__(self, header, data_col, slider_min, slider_max, slider_default_value=None, slider_step=None,
                  slider_marks={}, tooltip={}, updatemode='mouseup', **kwargs):
-        self.data_col = data_col
-        self.slider_min = slider_min
-        self.slider_max = slider_max
-
         component = dcc.Slider
 
         component_inputs = {
@@ -44,10 +40,18 @@ class DataFilterSlider(ControlPlugin):
             component_inputs=component_inputs
         )
 
-    def data_transform(self, df, control_value):
+        self.control_attributes = {
+            'data_col': data_col,
+            'slider_min': slider_min,
+            'slider_max': slider_max
+        }
+
+    @staticmethod
+    def configure(control_attributes, dp, df, control_value):
         """
         Filters data so given column takes value chosen from the slider.
         """
+        data_col = control_attributes['data_col']
+        df = df[df[data_col] == control_value]
 
-        df = df[df[self.data_col] == control_value]
-        return df
+        return df, {}

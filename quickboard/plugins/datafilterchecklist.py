@@ -1,6 +1,6 @@
 from dash import dcc
 
-from quickboard.base import ControlPlugin
+from quickboard.primitives import ControlPlugin
 
 
 class DataFilterChecklist(ControlPlugin):
@@ -12,7 +12,6 @@ class DataFilterChecklist(ControlPlugin):
         data_values = list of possible values to populate the checklist
     """
     def __init__(self, header, data_col, data_values, **kwargs):
-        self.data_col = data_col
         component = dcc.Checklist
         component_inputs = {
             'options': [
@@ -30,10 +29,14 @@ class DataFilterChecklist(ControlPlugin):
             **kwargs
         )
 
+        self.control_attributes = {'data_col': data_col}
+
     # Overrides parent method
-    def data_transform(self, df, control_value):
+    @staticmethod
+    def configure(control_attributes, dp, df, control_value):
         """
         Filters the data by checking the column has values in the currently checked values.
         """
-        df = df[df[self.data_col].isin(control_value)]
-        return df
+        data_col = control_attributes['data_col']
+        df = df[df[data_col].isin(control_value)]
+        return df, {}

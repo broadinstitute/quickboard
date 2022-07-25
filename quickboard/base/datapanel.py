@@ -5,8 +5,6 @@ from dash.dependencies import Input, Output, State, ALL
 from quickboard.dashsetup import app
 from quickboard.base import DynamicPanel
 
-import pandas as pd
-
 
 class DataPanel(DynamicPanel):
     """
@@ -57,11 +55,13 @@ class DataPanel(DynamicPanel):
             [Input(x.control, 'value') for x in self.plugins if hasattr(x, 'control')]
         )(self.update_table)
 
-    def update_table(self, data_state, control_values=[], interactive_data={}):
+    def update_table(self, data_state, interactive_data={}, *control_values):
         """
         A method called to populate the table when the state of a control object is changed.
         """
-        df = self.apply_transforms(ctx, control_values, interactive_data)
+        sub_df, updated_panel = self.apply_sidebar_transforms(data_state)
+        df, panel_dict = self.apply_transforms(ctx, interactive_data, sub_df, control_values)
+        updated_panel = dict(updated_panel, **panel_dict)
 
         data = df.to_dict('records')
         columns = [{'id': c, 'name': c} for c in df.columns]

@@ -1,16 +1,10 @@
 from dash import dcc, ctx
-from dash import html
-import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
 
-import quickboard.styles as styles
 from quickboard.dashsetup import app
 from quickboard.base import DynamicPanel
 
-import pandas as pd
 
-
-# Class representing a plot object with surrounding HTML objects
 class PlotPanel(DynamicPanel):
     """
     A dynamic panel meant to hold a Plotly figure.
@@ -62,6 +56,14 @@ class PlotPanel(DynamicPanel):
         """
         A method called to create the figure when the state of a control object is changed.
         """
-        df = self.apply_transforms(ctx, interactive_data, control_values)
-        fig = self.plotter(df, **self.plot_inputs)
+        sub_df, updated_panel = self.apply_sidebar_transforms(data_state)
+        df, panel_dict = self.apply_transforms(ctx, interactive_data, sub_df, control_values)
+
+        updated_panel = self.merge_dicts(updated_panel, panel_dict)
+        if 'plot_inputs' in updated_panel.keys():
+            plot_inputs = dict(self.plot_inputs, **updated_panel['plot_inputs'])
+        else:
+            plot_inputs = self.plot_inputs
+
+        fig = self.plotter(df, **plot_inputs)
         return fig

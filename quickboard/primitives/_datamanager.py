@@ -1,9 +1,5 @@
 import pandas as pd
 
-from dash.dependencies import Input, Output, State, ALL
-
-from quickboard.dashsetup import app
-
 
 class DataManager:
     """
@@ -17,7 +13,7 @@ class DataManager:
     def __init__(self, data_source=""):
         self.data_source = data_source
         self.source_type = None
-        self.sub_df = pd.DataFrame()  # df after sidebar transforms
+        self.df = pd.DataFrame()
 
         if isinstance(data_source, pd.DataFrame):
             self.source_type = "DataFrame"
@@ -57,8 +53,6 @@ class DataManager:
 
         else:
             self.df = pd.DataFrame()
-
-        self.sub_df = self.df
 
     def get_interactive_indices(self, data):
         """

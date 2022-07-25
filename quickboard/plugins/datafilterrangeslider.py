@@ -1,7 +1,7 @@
 import numpy as np
 from dash import dcc
 
-from quickboard.base import ControlPlugin
+from quickboard.primitives import ControlPlugin
 
 
 class DataFilterRangeSlider(ControlPlugin):
@@ -24,11 +24,6 @@ class DataFilterRangeSlider(ControlPlugin):
     """
     def __init__(self, header, data_col, slider_min, slider_max, slider_default_values=None, slider_step=None,
                  slider_marks={}, tooltip={}, updatemode='mouseup', edges_infinite=False, **kwargs):
-        self.data_col = data_col
-        self.slider_min = slider_min
-        self.slider_max = slider_max
-        self.edges_infinite = edges_infinite
-
         component = dcc.RangeSlider
 
         component_inputs = {
@@ -48,17 +43,26 @@ class DataFilterRangeSlider(ControlPlugin):
             component_inputs=component_inputs
         )
 
-    def data_transform(self, df, control_value):
+        self.control_attributes = {
+            'data_col': data_col,
+            'slider_min': slider_min,
+            'slider_max': slider_max,
+            'edges_infinite': edges_infinite
+        }
+
+    @staticmethod
+    def configure(control_attributes, dp, df, control_value):
         """
         Filters data so given column lies within the range of the slider.
         """
         current_min = control_value[0]
         current_max = control_value[1]
 
-        if self.edges_infinite:
-            current_min = -np.inf if current_min == self.slider_min else current_min
-            current_max = np.inf if current_max == self.slider_max else current_max
+        if control_attributes['edges_infinite']:
+            current_min = -np.inf if current_min == control_attributes['slider_min'] else current_min
+            current_max = np.inf if current_max == control_attributes['slider_max'] else current_max
 
-        df = df[(df[self.data_col] >= current_min) & (df[self.data_col] <= current_max)]
+        data_col = control_attributes['data_col']
+        df = df[(df[data_col] >= current_min) & (df[data_col] <= current_max)]
 
-        return df
+        return df, {}

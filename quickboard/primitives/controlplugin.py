@@ -3,7 +3,7 @@ from dash import html
 import dash_bootstrap_components as dbc
 
 import quickboard.styles as styles
-from quickboard.base import Panel
+from quickboard.primitives import Panel
 
 
 class ControlPlugin(Panel):
@@ -16,7 +16,7 @@ class ControlPlugin(Panel):
     """
 
     def __init__(self, header, component, component_inputs, **kwargs):
-
+        self.control_attributes = {}
         # Calibrate header based on input
         if isinstance(header, str):
             header = html.H3(header)
@@ -26,26 +26,20 @@ class ControlPlugin(Panel):
         self.control = component(**component_inputs)
         super().__init__(header=header, main_content=self.control, **kwargs)
 
-    def data_transform(self, df, control_value):
+    def serialize(self):
         """
-        A method for transforming the data to be used in the parent object; called when the control object is changed.
+        Returns a list with ClassName & control_attributes
         """
-        return df
+        classname = str(type(self)).split('.')[-1].split("'")[0]
+        return [classname, self.control_attributes]
 
-    def panel_transform(self, dp, control_value):
-        """
-        A method for transforming the parent DynamicPanel to modify its attributes; called when the control object
-        is changed.
-        """
-        pass
-
-    def configure(self, dp, df, control_value):
+    @staticmethod
+    def configure(control_attributes, dp, df, control_value):
         """
         Manipulates the DataFrame and DynamicPanel associated with the plugin according to the transform attributes of
         the plugin. Always returns transformed dataframe for further filtering without needing to serialize when passing
-        between components, but modifies DPs "in place".
+        between components and returns a dict of stateful changes to DynamicPanel".
         """
-        df = self.data_transform(df, control_value)
-        self.panel_transform(dp, control_value)
+        updated_panel = {}
 
-        return df
+        return df, updated_panel
