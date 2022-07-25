@@ -1,6 +1,6 @@
 from dash import dcc
 
-from quickboard.base import ControlPlugin
+from quickboard.primitives import ControlPlugin
 
 
 class DataFilterRadioButtons(ControlPlugin):
@@ -13,7 +13,6 @@ class DataFilterRadioButtons(ControlPlugin):
         data_values = list of possible values to populate the radio button list
     """
     def __init__(self, header, data_col, data_values):
-        self.data_col = data_col
         component = dcc.RadioItems
         component_inputs = {
             'options': [
@@ -30,10 +29,14 @@ class DataFilterRadioButtons(ControlPlugin):
             component_inputs=component_inputs
         )
 
+        self.control_attributes = {'data_col': data_col}
+
     # Overrides parent method
-    def data_transform(self, df, control_value):
+    @staticmethod
+    def configure(control_attributes, dp, df, control_value):
         """
         Filters the data by checking the column has value matching the selected button.
         """
-        df = df[df[self.data_col] == control_value]
-        return df
+        data_col = control_attributes['data_col']
+        df = df[df[data_col] == control_value]
+        return df, {}

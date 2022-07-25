@@ -3,7 +3,7 @@ from dash import dash_table
 from dash.dependencies import Input, Output, State, ALL
 
 from quickboard.dashsetup import app
-from quickboard.base import Panel
+from quickboard.primitives import Panel
 
 
 class DataDisplay(Panel):

@@ -1,9 +1,6 @@
 from dash import dcc
 from dash import html
-import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
-
-import pandas as pd
 
 from quickboard.base.sidebar import Sidebar
 from quickboard.dashsetup import app
@@ -90,7 +87,6 @@ class Quickboard:
             self.current_tab_content = html.Div(children=html.P('If this message persists, then there was an ERROR '
                                                                 'initializing tabs!'))
 
-            self.current_tab = self.tab_list[0]
             self.tab_dict = {
                 tab.tab_label: tab for tab in tab_list
             }
@@ -129,14 +125,15 @@ class Quickboard:
         """
         Callback method for updating the current tab, based on user click.
         """
-        self.current_tab = self.tab_dict[tab_name]
-        return self.current_tab.container
+        current_tab = self.tab_dict[tab_name]
+        return current_tab.container
 
     def update_sidebar_layout(self, tab_name):
         """
         Callback method for updating the sidebar layout corresponding to the current tab.
         """
-        plugins = self.current_tab.sidebar_plugins
+        current_tab = self.tab_dict[tab_name]
+        plugins = current_tab.sidebar_plugins
         plugin_containers = [x.container for x in plugins]
 
         # Put hlines between plugins
@@ -151,33 +148,29 @@ class Quickboard:
 
         return [set_tab_container, updated_sidebar_layout]
 
-    def update_data(self, data_state=None, control_values=[], tab_name=""):
+    def update_data(self, data_state={}, control_values=[], tab_name=""):
         """
         Callback method handling changes in current tab data sources. Can be triggered by either:
             change in current tab;
             interacting with sidebar plugins.
         """
 
-        # Find control plugin objects & dynamic panels corresponding to the controls for the sidebar
-        # Split into case of 0 or more tabs and any sidebar or none
+        data_state['current_tab'] = tab_name
+        current_tab = self.tab_dict[tab_name]
+
+        # Get sidebar_plugins depending on tab
         if tab_name != "":
-            sidebar_plugins = self.current_tab.sidebar_plugins
-            dps_list = self.current_tab.dps
+            sidebar_plugins = current_tab.sidebar_plugins
         else:
             sidebar_plugins = self.sidebar.plugins if hasattr(self, 'sidebar') else []
-            dps_list = self.dps
 
         controls = [plugin for plugin in sidebar_plugins if hasattr(plugin, 'control')]
+        serialized_controls = [c.serialize() for c in controls]
 
-        # Apply control plugin effects
-        for dp in dps_list:
-            new_df = dp.data_manager.df
-            for control, value in zip(controls, control_values):
-                new_df = control.configure(dp, new_df, value)
-            dp.data_manager.sub_df = new_df
+        # Create list of 3-tuples w/ control class, control attributes, and control values
+        control_info = [
+            x + [y] for x, y in zip(serialized_controls, control_values)
+        ]
 
-        if data_state is None:
-            data_state = {'callback_num': 0}
-
-        data_state['callback_num'] = (data_state['callback_num'] + 1) % 1000
+        data_state['sidebar_controls'] = control_info
         return data_state

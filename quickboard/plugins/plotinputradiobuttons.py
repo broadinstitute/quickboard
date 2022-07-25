@@ -1,6 +1,6 @@
 from dash import dcc
 
-from quickboard.base import ControlPlugin
+from quickboard.primitives import ControlPlugin
 
 
 class PlotInputRadioButtons(ControlPlugin):
@@ -13,7 +13,6 @@ class PlotInputRadioButtons(ControlPlugin):
         data_values = list of possible values to populate the radio button list
     """
     def __init__(self, header, plot_input, data_values):
-        self.plot_input = plot_input
         component = dcc.RadioItems
         component_inputs = {
             'options': [
@@ -30,9 +29,14 @@ class PlotInputRadioButtons(ControlPlugin):
             component_inputs=component_inputs
         )
 
+        self.control_attributes = {'plot_input': plot_input}
+
     # Overrides parent method
-    def panel_transform(self, dp, control_value):
+    @staticmethod
+    def configure(control_attributes, dp, df, control_value):
         """
-        Changes the PlotPanel's plotting behavior to reflect the user choice.
+        Updates a PlotPanel's plot_inputs attribute to have new value equal to that selected by buttons.
         """
-        dp.plot_inputs[self.plot_input] = control_value
+        plot_input = control_attributes['plot_input']
+        update = {plot_input: control_value}
+        return df, {'plot_inputs': update}
