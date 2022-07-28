@@ -16,7 +16,7 @@ class BaseTab:
         sidebar_header = header to use on top of sidebar while on this tab
         sidebar_plugins = plugins to use in the sidebar while on this tab
     """
-    def __init__(self, tab_label, tab_header, content_list, sidebar_header="Data Controls", sidebar_plugins=[]):
+    def __init__(self, tab_label, tab_header="", content_list=[], sidebar_header="Data Controls", sidebar_plugins=[]):
         self.tab_label = tab_label
         self.tab = dcc.Tab(value=tab_label, label=tab_label)
         self.sidebar_header = sidebar_header
@@ -28,12 +28,6 @@ class BaseTab:
                     'control_type': 'sidebar_control',
                     'unique_id': id(plugin)
                 }
-
-        # Collect dynamic panels from all subobjects into one place
-        self.dps = []
-        for entity in content_list:
-            if hasattr(entity, 'dps'):
-                self.dps += entity.dps
 
         content_containers = [x.container for x in content_list]
         for i in range(len(content_containers) - 1):

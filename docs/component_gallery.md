@@ -148,7 +148,6 @@ we focus only on the former case. For more on sidebars and tabs, see the [Guided
 
 ```
 my_plot = qbb.PlotPanel(
-    header="",
     plotter=px.scatter,
     plot_inputs={
         'x': 'year',
@@ -201,7 +200,6 @@ countries = ['United States', 'Brazil', 'France', 'Thailand', 'Japan',
             'Egypt', 'Argentina', 'Indonesia', 'Greece', 'Iran']
 
 my_plot = qbb.PlotPanel(
-    header="",
     plotter=px.scatter,
     plot_inputs={
         'x': 'pop',
@@ -252,7 +250,6 @@ possible categories using a `category_orders` dict in `plot_inputs`.
 slider_marks = { min(df.year) + 5*i: str(min(df.year) + 5*i) for i in range(0, int((max(df.year) - min(df.year)/5))+1) }
 
 my_plot = qbb.PlotPanel(
-    header="",
     plotter=px.bar,
     plot_inputs={
         'x': 'continent',
@@ -320,7 +317,6 @@ my_df = df.copy()
 my_df['lifeExp_diff'] = df['country'].map(lifeExp_dict)
 
 my_plot = qbb.PlotPanel(
-    header="",
     plotter=px.line,
     plot_inputs={
         'x': 'year',
@@ -484,7 +480,6 @@ second_plot = qbb.PlotPanel(
 )
 
 content = qbb.ContentGrid(
-    header="",
     entities=[
         first_plot,
         second_plot
@@ -559,7 +554,6 @@ second_plot = qbb.PlotPanel(
 )
 
 content = qbb.ContentGrid(
-    header="",
     entities=[
         first_plot,
         second_plot
@@ -617,7 +611,6 @@ second_table = qbb.DataPanel(
 )
 
 content = qbb.ContentGrid(
-    header="",
     entities=[
         first_plot,
         second_table

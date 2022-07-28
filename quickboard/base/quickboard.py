@@ -16,21 +16,14 @@ class Quickboard:
         sidebar_plugins = list of plugins to use in sidebar if no tabs
         tab_list = list of tab objects from which the board is comprised
         content_list = objects to display in the absence of tabs
-        data_paths = dictionary of `{tab label: paths}` where `paths` is either string or dictionary of
-                    `{data source name: path}` to be reference in dynamic panels within the given tab
     """
-    def __init__(self, sidebar_header="Data Controls", sidebar_plugins=[], tab_list=[], content_list=[],
-                 data_paths={}):
+    def __init__(self, sidebar_header="Data Controls", sidebar_plugins=[], tab_list=[], content_list=[]):
         self.style = styles.CONTENT_STYLE
-        self.tabs_container = self.initialize_tabs(tab_list, data_paths)
+        self.tabs_container = self.initialize_tabs(tab_list)
         self.sidebar_container = self.initialize_sidebar(sidebar_header, sidebar_plugins)
 
         # Used in case user doesn't want to have tabs, but one page with some contents
         self.content_list = html.Div([x.container for x in content_list])
-        self.dps = []
-        for entity in content_list:
-            if hasattr(entity, 'dps'):
-                self.dps += entity.dps
 
         self.container = html.Div(
             children=[
@@ -65,17 +58,7 @@ class Quickboard:
             update_data_inputs,
         )(self.update_data)
 
-    def initialize_tabs(self, tab_list, data_paths):
-        # Parse data paths
-        self.data_paths = {}
-        if isinstance(data_paths, str):
-            for tab in tab_list:
-                self.data_paths[tab.tab_label] = data_paths
-        elif isinstance(data_paths, dict):
-            self.data_paths = data_paths
-        else:
-            print("ERROR: Data paths must be either const string or dictionary of tab_label -> paths.")
-
+    def initialize_tabs(self, tab_list):
         # Collect tabs together unless user inputs none
         self.tab_list = tab_list
         if len(tab_list) != 0:

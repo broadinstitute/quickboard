@@ -13,21 +13,18 @@ class DynamicPanel(Panel):
     """
     A template for creating larger panels holding objects which can be updated via different controls and plugins.
     Inputs:
-        header = header text/object
         main_content = main HTML object to hold
         data_source = key to use in tab data dictionary to get data inputs for this panel
+        header = header text/object
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
         kwargs = extra keyword arguments become attributes of the object for extending functionality easily
     """
-    def __init__(self, header, main_content, data_source="data", body="", plugins=[], plugin_wrap=2, **kwargs):
+    def __init__(self, main_content, data_source="data", header="", body="", plugins=[], plugin_wrap=2, **kwargs):
         super().__init__(header, main_content, **kwargs)
         self.data_manager = DataManager(data_source)
         self.data_manager.load_data()
-
-        # Keep list of self as DynamicPanel to register it with larger objects holding it for tab-level callbacks
-        self.dps = [self]
 
         # Add optional body text above main content under header
         self.body = html.Div([body, html.Br()])
@@ -38,7 +35,7 @@ class DynamicPanel(Panel):
         # Configure plugin related attributes
         self.plugins = plugins
         border = False if len(plugins) == 0 else True
-        self.plugin_frame = ContentGrid(header="", entities=plugins, col_wrap=plugin_wrap, border=border)
+        self.plugin_frame = ContentGrid(header="", content_list=plugins, col_wrap=plugin_wrap, border=border)
 
         self.container = html.Div([
             self.header, self.body, html.Br(), self.main_content, html.Br(), self.plugin_frame.container

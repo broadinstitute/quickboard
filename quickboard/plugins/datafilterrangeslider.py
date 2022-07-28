@@ -9,7 +9,6 @@ class DataFilterRangeSlider(ControlPlugin):
     A plugin for filtering data to be displayed by removing records where a certain column's value does not lie in
     the range specified by the slider.
     Inputs:
-        header = header text/object
         data_col = column from data to restrict values from slider; must be numerical
         slider_min = the minimal value of the slider
         slider_max = the maximal value of the slider
@@ -21,9 +20,10 @@ class DataFilterRangeSlider(ControlPlugin):
         updatemode = either 'mouseup' (default) or 'drag' to specify when data should be updated
         edges_infinite = when True, consider edges of slider as evaluating to infinity, i.e. no restriction imposed
             on that end; useful for ending a slider with label like '10+'
+        header = header text/object
     """
-    def __init__(self, header, data_col, slider_min, slider_max, slider_default_values=None, slider_step=None,
-                 slider_marks={}, tooltip={}, updatemode='mouseup', edges_infinite=False, **kwargs):
+    def __init__(self, data_col, slider_min, slider_max, slider_default_values=None, slider_step=None,
+                 slider_marks={}, tooltip={}, updatemode='mouseup', edges_infinite=False, header="", **kwargs):
         component = dcc.RangeSlider
 
         component_inputs = {

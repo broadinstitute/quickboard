@@ -33,7 +33,6 @@ data_a['weight'] = 5 * np.random.random(len(data_a)) + 2
 data_a['weight'] = data_a['weight'].apply(lambda x: round(x, 2))
 data_a['day'] = np.random.choice(['Mon', 'Wed', 'Fri'], len(data_a))
 data_a['batch'] = np.random.choice(['batch1', 'batch2'], len(data_a))
-data_a.to_csv('data_a.tsv', sep='\t', index=False)
 ```
 
 Then we have `data_b.tsv`, generated with:
@@ -43,7 +42,6 @@ data_b['size'] = np.random.choice(range(4,10), len(data_b))
 data_b['measurement'] = 7 * np.random.random(len(data_b)) + 3
 data_b['day'] = np.random.choice(['Mon', 'Wed', 'Fri'], len(data_b))
 data_b['batch'] = np.random.choice(['batch1', 'batch2'], len(data_b))
-data_b.to_csv('data_b.tsv', sep='\t', index=False)
 ```
 
 Here is what they look like. For `data_a.tsv`:
@@ -117,12 +115,14 @@ SizeWeightPlot = qbb.PlotPanel(
         'y': 'weight',
         'color': 'batch',
         'title': 'Size vs Weight by Batch'
-    }
+    },
+    data_source=data_a    # DataFrame generated/loaded in memory above; can also use file path to csv/tsv
 )
 ```
 
-The code should run just fine, but we can't see anything yet! That's because we need to place the `PlotPanel` inside of
-other Quickboard components that make up the overall structure of the board.
+The code should run just fine, but nothing appears yet! That's because we didn't call the `start_app` function. 
+There are examples of viewing just a `PlotPanel` in the [Component Gallery](component_gallery.md), so let's keep going 
+and create a full dashboard that can scale to handle new plots easily.
 
 ### Creating the Overall Layout
 
@@ -135,7 +135,7 @@ To do that, let's create the object and put our `SizeWeightPlot` inside:
 ```
 TabA_CG = qbb.ContentGrid(
     header='A Few Plots of data_a',
-    entities=[    # Here we put a list of Panel's or more ContentGrid's to display inside
+    content_list=[    # Here we put a list of Panel's or more ContentGrid's to display inside
         SizeWeightPlot
     ],
     col_wrap=2
@@ -161,14 +161,11 @@ We're at the last step of setting up our board infrastructure. Let's make a Quic
 board = qbb.Quickboard(
     tab_list=[    # List of BaseTab's to include in the board
         TabA
-    ],
-    data_paths={    # The keys MUST be the tab_label fields from before, and the values the data files to use here
-        'Tab A': 'data_a.tsv'
-    }
+    ]
 )
 ```
 
-We've now assembled all of the ingredients to make a Quickboard. To review, here is the hierarchy of the objects we
+We've now assembled all the ingredients to make a Quickboard. To review, here is the hierarchy of the objects we
 created:
 
 ```
@@ -207,7 +204,8 @@ LabelBarPlot = qbb.PlotPanel(
         'y': 'size',
         'color': 'batch',
         'title': 'Plotting the quantity of something per label'
-    }
+    },
+    data_source=data_a
 )
 ```
 
@@ -216,7 +214,7 @@ We can drop this right into the `ContentGrid` we made before. Let's modify it li
 ```
 TabA_CG = qbb.ContentGrid(
     header='A Few Plots of data_a',
-    entities=[
+    content_list=[
         SizeWeightPlot,
         LabelBarPlot    # NEW LINE HERE
     ],
@@ -306,6 +304,7 @@ LabelBarPlot = qbb.PlotPanel(
         'color': 'batch',
         'title': 'Plotting the quantity of something per label'
     },
+    data_source=data_a,
     plugins=[     # Notice we use just "plugins" now
         plg.DataFilterChecklist(
             header='Toggle Including Days',
@@ -341,7 +340,7 @@ another `ContentGrid`! You can control the column wrapping through the `plugin_w
 
 Let's add one more plugin to finish off this tab. Right now, the bar chart plots the `size` column against the `label`.
 Maybe we want to also see the bar chart of `weight` by `label`. We *could* add another plot to the page to handle this,
-but instead we'll add a plugin that let's us freely toggle between these two plots in the same frame.
+but instead we'll add a plugin that lets us freely toggle between these two plots in the same frame.
 
 The plugin we want here is `PlotInputRadioButtons`. Let's add it to the bar chart like so:
 ```
@@ -354,6 +353,7 @@ LabelBarPlot = qbb.PlotPanel(
         'color': 'batch',
         'title': 'Plotting the quantity of something per label'
     },
+    data_source=data_a,
     plugins=[
         plg.DataFilterChecklist(
             header='Toggle Including Days',
@@ -412,15 +412,11 @@ board = qbb.Quickboard(
         TabA,
         TabB    # Our new tab...
     ],
-    data_paths={
-        'Tab A': 'data_a.tsv',
-        'Tab B': 'data_b.tsv'    # ...and data to go with it!
-    }
 )
 ```
 
 And there it is -- a blank canvas waiting to be filled with anything you'd like! Now would be a good time to practice
-some of the ideas discussed here and turn Tab B into a sophisticated tab like Tab A!
+some of the ideas discussed here and turn Tab B into a sophisticated tab like Tab A using `data_b`!
 
 ### Final Hierarchy and Code
 
@@ -458,6 +454,7 @@ SizeWeightPlot = qbb.PlotPanel(
         'color': 'batch',
         'title': 'Size vs Weight by Batch'
     },
+    data_source=data_a,
     plugins=[
         plg.DataFilterChecklist(
             header='Toggle Including Days',
@@ -476,6 +473,7 @@ LabelBarPlot = qbb.PlotPanel(
         'color': 'batch',
         'title': 'Plotting the quantity of something per label'
     },
+    data_source=data_a,
     plugins=[
         plg.DataFilterChecklist(
             header='Toggle Including Days',
@@ -492,7 +490,7 @@ LabelBarPlot = qbb.PlotPanel(
 
 TabA_CG = qbb.ContentGrid(
     header='A Few Plots of data_a',
-    entities=[
+    content_list=[
         SizeWeightPlot,
         LabelBarPlot
     ],
@@ -527,11 +525,7 @@ board = qbb.Quickboard(
     tab_list=[
         TabA,
         TabB
-    ],
-    data_paths={
-        'Tab A': 'data_a.tsv',
-        'Tab B': 'data_b.tsv'
-    }
+    ]
 )
 
 start_app(board, mode="external", port=8050)    # Note: Remove 'mode' input if running a .py file instead of notebook

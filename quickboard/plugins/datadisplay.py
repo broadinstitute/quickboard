@@ -10,11 +10,11 @@ class DataDisplay(Panel):
     """
     A plugin for showing data beneath a DynamicPanel, with listening capabilities.
     Inputs:
-        header = header text/object
         data_source = key to use in tab data dictionary to get data inputs for this panel
+        header = header text/object
         listen = list of control objects to get notified of changes in them
     """
-    def __init__(self, header, data_source, listen=[], **kwargs):
+    def __init__(self, data_source, header="", listen=[], **kwargs):
         # Calibrate header based on input and control type
         if isinstance(header, str):
             header = html.H5(header)

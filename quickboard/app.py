@@ -19,11 +19,13 @@ def generate_layout(board):
     return layout
 
 
-def start_app(board, mode='external', host=os.getenv("HOST", "127.0.0.1"), port=8050, proxy=None, debug=True, **flask):
+def start_app(board, mode='external', host=os.getenv("HOST", "127.0.0.1"), port=8050, proxy=None, debug=True,
+              app_title="Dash", **flask):
     """
     Takes an app instance and configures its board layout, then runs the app on given port. Extra args get sent to
     Flask server.
     """
+    app.title = app_title
     app.layout = generate_layout(board)
 
     if isnotebook():

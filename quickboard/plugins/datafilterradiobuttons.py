@@ -8,11 +8,11 @@ class DataFilterRadioButtons(ControlPlugin):
     A plugin for filtering data to be displayed by removing records where a certain column's value does not equal the
     selected radio button value.
     Inputs:
-        header = header text/object
         data_col = column from data to check for values matching button
         data_values = list of possible values to populate the radio button list
+        header = header text/object
     """
-    def __init__(self, header, data_col, data_values):
+    def __init__(self, data_col, data_values, header=""):
         component = dcc.RadioItems
         component_inputs = {
             'options': [

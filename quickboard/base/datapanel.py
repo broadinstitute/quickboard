@@ -10,15 +10,15 @@ class DataPanel(DynamicPanel):
     """
     A dynamic panel meant to hold a Dash DataTable.
     Inputs:
-        header = header text/object
         data_source = where data_manager should look for data; must be either DataFrame, file path, or list of PlotPanel
         and string of one of hoverData, clickData, or selectedData for interactive data generation
+        header = header text/object
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
         kwargs = extra keyword arguments become attributes of the object for extending functionality easily
     """
-    def __init__(self, header, data_source="data", body="", plugins=[], plugin_wrap=2, **kwargs):
+    def __init__(self, data_source="data", header="", body="", plugins=[], plugin_wrap=2, **kwargs):
         self.datatable = dash_table.DataTable(
             page_action='none',
             sort_action='native',

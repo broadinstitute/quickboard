@@ -9,17 +9,18 @@ class PlotPanel(DynamicPanel):
     """
     A dynamic panel meant to hold a Plotly figure.
     Inputs:
-        header = header text/object
         plotter = function which outputs a Plotly figure
         plot_inputs = dictionary of inputs which is passed to plotter to produce figure
         data_source = where data_manager should look for data; must be either DataFrame, file path, or list of PlotPanel
         and string of one of hoverData, clickData, or selectedData for interactive data generation
+        header = header text/object
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
         kwargs = extra keyword arguments become attributes of the object for extending functionality easily
     """
-    def __init__(self, header, plotter, plot_inputs, data_source="data", body="", plugins=[], plugin_wrap=2, **kwargs):
+    def __init__(self, plotter, plot_inputs, data_source="data", header="", body="",
+                 plugins=[], plugin_wrap=2, **kwargs):
         # Plot specific attributes
         self.plot_inputs = plot_inputs
         self.plotter = plotter

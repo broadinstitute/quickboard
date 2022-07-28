@@ -12,23 +12,17 @@ class ContentGrid:
     An object for storing other components into a grid.
     Inputs:
         header = header text/object
-        entities = list of objects to store in the grid
-        col_wrap = number of entities to display within a row
+        content_list = list of objects to store in the grid
+        col_wrap = number of objects to display within a row
         border = boolean to determine if the grid has a surrounding border
     """
-    def __init__(self, header, entities, col_wrap=2, border=True):
+    def __init__(self, header="", content_list=[], col_wrap=2, border=True):
         self.header = html.H2(header, style=styles.CONTENT_GRID_HEADER_STYLE) if type(header) == str else header
-
-        # Collect dynamic panels from all subobjects into one place
-        self.dps = []
-        for entity in entities:
-            if hasattr(entity, 'dps'):
-                self.dps += entity.dps
 
         table_rows = []
         table_entry_width = f'{round(100 / col_wrap, 2)}%'
         # Break up plot list into equal sized chunks with last row filled with "None" for spillovers
-        for row in itertools.zip_longest(*(iter(entities),) * col_wrap):
+        for row in itertools.zip_longest(*(iter(content_list),) * col_wrap):
             table_row = html.Tr([
                 html.Td(
                     [x.container],

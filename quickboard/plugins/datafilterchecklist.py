@@ -7,11 +7,11 @@ class DataFilterChecklist(ControlPlugin):
     """
     A plugin for filtering data to be displayed by removing records where a certain column's value is not in checklist.
     Inputs:
-        header = header text/object
         data_col = column from data to check for values in checklist
         data_values = list of possible values to populate the checklist
+        header = header text/object
     """
-    def __init__(self, header, data_col, data_values, **kwargs):
+    def __init__(self, data_col, data_values, header="", **kwargs):
         component = dcc.Checklist
         component_inputs = {
             'options': [

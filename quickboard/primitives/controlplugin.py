@@ -10,12 +10,12 @@ class ControlPlugin(Panel):
     """
     Creates an HTML component representing controls for a DynamicPanel, as a plugin.
     Inputs:
-        header = header text/object
         component = component from dcc or similar
         component_inputs = the inputs to set up the component
+        header = header text/object
     """
 
-    def __init__(self, header, component, component_inputs, **kwargs):
+    def __init__(self, component, component_inputs, header="", **kwargs):
         self.control_attributes = {}
         # Calibrate header based on input
         if isinstance(header, str):

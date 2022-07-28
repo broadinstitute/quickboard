@@ -8,11 +8,11 @@ class PlotInputRadioButtons(ControlPlugin):
     A plugin for modifying a PlotPanel's plotting behavior. The `plot_input` value can be dynamically changed based on
     the selection via radio buttons.
     Inputs:
-        header = header text/object
         plot_input = name of the PlotPanel's plotter input to be changed by clicking the radio buttons
         data_values = list of possible values to populate the radio button list
+        header = header text/object
     """
-    def __init__(self, header, plot_input, data_values):
+    def __init__(self, plot_input, data_values, header=""):
         component = dcc.RadioItems
         component_inputs = {
             'options': [
