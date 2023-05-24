@@ -19,6 +19,7 @@ class Quickboard:
     """
     def __init__(self, sidebar_header="Data Controls", sidebar_plugins=[], tab_list=[], content_list=[]):
         self.style = styles.CONTENT_STYLE
+        self.tab_list = tab_list
         self.tabs_container = self.initialize_tabs(tab_list)
         self.sidebar_container = self.initialize_sidebar(sidebar_header, sidebar_plugins)
 
@@ -60,7 +61,6 @@ class Quickboard:
 
     def initialize_tabs(self, tab_list):
         # Collect tabs together unless user inputs none
-        self.tab_list = tab_list
         if len(tab_list) != 0:
             self.tabs = dcc.Tabs(
                     value=self.tab_list[0].tab_label,
