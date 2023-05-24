@@ -5,3 +5,5 @@ from .datafilterslider import DataFilterSlider
 from .datafilterrangeslider import DataFilterRangeSlider
 from .datasumchecklist import DataSumChecklist
 from .plotinputradiobuttons import PlotInputRadioButtons
+from .plotinputslider import PlotInputSlider
+from .plotinputrangeslider import PlotInputRangeSlider
