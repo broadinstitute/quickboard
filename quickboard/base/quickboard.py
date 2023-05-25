@@ -61,7 +61,7 @@ class Quickboard:
 
     def initialize_tabs(self, tab_list):
         # Collect tabs together unless user inputs none
-        if len(tab_list) != 0:
+        if len(tab_list) > 0:
             self.tabs = dcc.Tabs(
                     value=self.tab_list[0].tab_label,
                     children=[x.tab for x in self.tab_list]
@@ -81,10 +81,11 @@ class Quickboard:
             )
         else:
             tabs_container = html.Div([])
+
         return tabs_container
 
     def initialize_sidebar(self, sidebar_header, sidebar_plugins):
-        if len(self.tab_list) != 0:
+        if len(self.tab_list) > 0:
             first_tab = self.tab_list[0]
             self.sidebar = Sidebar(first_tab.sidebar_header, first_tab.sidebar_plugins)
             return self.sidebar.container
@@ -139,10 +140,10 @@ class Quickboard:
         """
 
         data_state['current_tab'] = tab_name
-        current_tab = self.tab_dict[tab_name]
 
         # Get sidebar_plugins depending on tab
         if tab_name != "":
+            current_tab = self.tab_dict[tab_name]
             sidebar_plugins = current_tab.sidebar_plugins
         else:
             sidebar_plugins = self.sidebar.plugins if hasattr(self, 'sidebar') else []
