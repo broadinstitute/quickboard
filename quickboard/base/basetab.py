@@ -15,12 +15,14 @@ class BaseTab:
         content_list = list of objects to display on the tab
         sidebar_header = header to use on top of sidebar while on this tab
         sidebar_plugins = plugins to use in the sidebar while on this tab
+        sidebar_width = width to use for sidebar style on this tab
     """
-    def __init__(self, tab_label, tab_header="", content_list=[], sidebar_header="Data Controls", sidebar_plugins=[]):
+    def __init__(self, tab_label, tab_header="", content_list=[], sidebar_header="Data Controls", sidebar_plugins=[], sidebar_width="18rem"):
         self.tab_label = tab_label
         self.tab = dcc.Tab(value=tab_label, label=tab_label)
         self.sidebar_header = sidebar_header
         self.sidebar_plugins = sidebar_plugins
+        self.sidebar_width = sidebar_width
 
         for plugin in self.sidebar_plugins:
             if hasattr(plugin, 'control'):
