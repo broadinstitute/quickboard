@@ -14,20 +14,23 @@ class ContentGrid:
         header = header text/object
         content_list = list of objects to store in the grid
         col_wrap = number of objects to display within a row
+        content_widths = list of integers between 0 and 100 for percent width for corresponding content_list item
         border = boolean to determine if the grid has a surrounding border
     """
-    def __init__(self, header="", content_list=[], col_wrap=2, border=True):
+    def __init__(self, header="", content_list=[], col_wrap=2, content_widths=[], border=True):
         self.header = html.H2(header, style=styles.CONTENT_GRID_HEADER_STYLE) if type(header) == str else header
 
         table_rows = []
-        table_entry_width = f'{round(100 / col_wrap, 2)}%'
         # Break up plot list into equal sized chunks with last row filled with "None" for spillovers
-        for row in itertools.zip_longest(*(iter(content_list),) * col_wrap):
+        for i, row in enumerate(itertools.zip_longest(*(iter(content_list),) * col_wrap)):
             table_row = html.Tr([
                 html.Td(
                     [x.container],
-                    style={"width": "100%", "padding": "5px"}
-                ) for x in row if x is not None
+                    style={
+                        "width": f'{content_widths[col_wrap * i + j]}%' if col_wrap * i + j < len(content_widths) else "100%",
+                        "padding": "5px"
+                    }
+                ) for j, x in enumerate(row) if x is not None
             ])
             table_rows.append(table_row)
 

@@ -1,4 +1,4 @@
-from dash import html
+from dash import html, dcc
 
 import pandas as pd
 
@@ -18,27 +18,35 @@ class DynamicPanel(Panel):
         header = header text/object
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
-        plugin_wrap = number of plugins to load per row underneath main object
+        plugin_align = placement of plugins; either bottom, top, left, or right
+        plugin_wrap = number of plugins to load per row in plugin grid
         kwargs = extra keyword arguments become attributes of the object for extending functionality easily
     """
-    def __init__(self, main_content, data_source="data", header="", body="", plugins=[], plugin_wrap=2, **kwargs):
+    def __init__(self, main_content, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2, **kwargs):
         super().__init__(header, main_content, **kwargs)
         self.data_manager = DataManager(data_source)
         self.data_manager.load_data()
 
         # Add optional body text above main content under header
-        self.body = html.Div([body, html.Br()])
+        self.body = html.Div([dcc.Markdown(body, mathjax=True)])
 
-        self.main_content = html.Div([main_content], style={'border-width': '1px', 'border-style': 'solid',
-                                                            'border-color': 'black'})
+        self.main_content = Panel("", html.Div([main_content], style={'border-width': '1px', 'border-style': 'solid',
+                                                            'border-color': 'black'}))
 
         # Configure plugin related attributes
         self.plugins = plugins
         border = False if len(plugins) == 0 else True
         self.plugin_frame = ContentGrid(header="", content_list=plugins, col_wrap=plugin_wrap, border=border)
 
+        # Control placement of plugins relative to content
+        assert plugin_align in ["bottom", "top", "left", "right"]
+        full_wrap = 1 if plugin_align == "bottom" or plugin_align == "top" else 2
+        full_content = [self.plugin_frame, self.main_content] if plugin_align in ["top", "left"] else [self.main_content, self.plugin_frame]
+        full_content_widths = [25, 100] if plugin_align == "left" else [100, 25] if plugin_align == "right" else []
+        self.full_content_grid = ContentGrid(header="", content_list=full_content, content_widths=full_content_widths, col_wrap=full_wrap)
+
         self.container = html.Div([
-            self.header, self.body, html.Br(), self.main_content, html.Br(), self.plugin_frame.container
+            self.header, self.body, html.Br(), self.full_content_grid.container # self.main_content, html.Br(), self.plugin_frame.container
         ],
             style=styles.PANEL_STYLE
         )
