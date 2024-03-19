@@ -40,11 +40,13 @@ class Quickboard:
         #############
 
         # Add callback for tab switching
+        # Handles updating sidebar contents, tab contents, and resizing sidebar margins based on tab properties
         if len(tab_list) > 0:
             app.callback(
                 Output(self.current_tab_content, 'children'),
                 Output(self.sidebar_container, 'children'),
-                # Output(self.sidebar_container, 'style'),
+                Output(self.sidebar_container, 'style'),
+                Output(self.container, 'style'),
                 Input(self.tabs, 'value')
             )(self.tab_switch_update)
 
@@ -126,19 +128,20 @@ class Quickboard:
         sidebar_layout = [y for sublist in hlines for y in sublist][:-1]
 
         # Update sidebar width
-        # width = current_tab.sidebar_width
-        # new_style = styles.SIDEBAR_STYLE | {'width': width}
+        width = current_tab.sidebar_width
+        new_style = styles.SIDEBAR_STYLE | {'width': width}
 
-        # return [self.sidebar.header + sidebar_layout, new_style]
-        return self.sidebar.header + sidebar_layout
+        return [self.sidebar.header + sidebar_layout, new_style]
 
     def tab_switch_update(self, tab_name):
         set_tab_container = self.set_tab(tab_name)
-        # updated_sidebar_layout, updated_sidebar_style = self.update_sidebar_layout(tab_name)
-        updated_sidebar_layout = self.update_sidebar_layout(tab_name)
+        updated_sidebar_layout, updated_sidebar_style = self.update_sidebar_layout(tab_name)
+        # updated_sidebar_layout = self.update_sidebar_layout(tab_name)
 
-        # return [set_tab_container, updated_sidebar_layout, updated_sidebar_style]
-        return [set_tab_container, updated_sidebar_layout]
+        # Update content margins to match sidebar width
+        updated_main_content_style = self.container.style | {'margin-left': updated_sidebar_style['width']}
+
+        return [set_tab_container, updated_sidebar_layout, updated_sidebar_style, updated_main_content_style]
 
     def update_data(self, data_state={}, control_values=[], tab_name=""):
         """
