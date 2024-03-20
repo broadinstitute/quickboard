@@ -17,9 +17,9 @@ class Panel:
         self.header = header
         self.main_content = main_content if isinstance(main_content, list) else [main_content]
 
-        self.container = dbc.Toast(
-            children=self.main_content,
-            header=self.header,
+        self.container = html.Div(
+            children=[self.header] + self.main_content,
+            # header=self.header,
             style=styles.PANEL_STYLE
         )
 

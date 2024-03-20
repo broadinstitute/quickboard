@@ -1,9 +1,7 @@
-from dash import dcc
-from dash import html
+from dash import dcc, html, callback
 from dash.dependencies import Input, Output, State, ALL
 
 from quickboard.base.sidebar import Sidebar
-from quickboard.dashsetup import app
 import quickboard.styles as styles
 
 
@@ -42,7 +40,7 @@ class Quickboard:
         # Add callback for tab switching
         # Handles updating sidebar contents, tab contents, and resizing sidebar margins based on tab properties
         if len(tab_list) > 0:
-            app.callback(
+            callback(
                 Output(self.current_tab_content, 'children'),
                 Output(self.sidebar_container, 'children'),
                 Output(self.sidebar_container, 'style'),
@@ -56,7 +54,7 @@ class Quickboard:
         if len(tab_list) > 0:
             update_data_inputs = [update_data_inputs, Input(self.tabs, 'value')]
 
-        app.callback(
+        callback(
             Output('data_store', 'data'),
             State('data_store', 'data'),
             update_data_inputs,

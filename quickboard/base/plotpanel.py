@@ -1,7 +1,6 @@
-from dash import dcc, ctx
+from dash import dcc, ctx, callback
 from dash.dependencies import Input, Output, State, ALL
 
-from quickboard.dashsetup import app
 from quickboard.base import DynamicPanel
 
 
@@ -46,7 +45,7 @@ class PlotPanel(DynamicPanel):
         else:
             interactive_data = Input('data_store', 'data')
 
-        app.callback(
+        callback(
             Output(self.graph, 'figure'),
             Input('data_store', 'data'),
             interactive_data,

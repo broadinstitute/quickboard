@@ -1,10 +1,9 @@
 import os
 
+import dash
+import dash_bootstrap_components as dbc
 from dash import html
 from dash import dcc
-
-from quickboard.dashsetup import app
-from quickboard.utils.environment import isnotebook
 
 
 def generate_layout(board):
@@ -19,27 +18,28 @@ def generate_layout(board):
     return layout
 
 
-def start_app(board, mode='external', host=os.getenv("HOST", "127.0.0.1"), port=8050, proxy=None, debug=True,
-              app_title="Dash", **flask):
+def start_app(board, theme=dbc.themes.BOOTSTRAP, jupyter_mode='external', host=os.getenv("HOST", "127.0.0.1"),
+              port=8050, proxy=None, debug=True, app_title="Dash", **flask):
     """
-    Takes an app instance and configures its board layout, then runs the app on given port. Extra args get sent to
-    Flask server.
+    Takes an app instance and configures its board layout, then runs the app on given port. Extra args get sent to Flask server.
+    Theme should be selected from dbc.themes.
+    Other nice themes: DARKLY, CYBORG, BOOTSTRAP, FLATLY, LUX, LUMEN, SOLAR.
     """
-    app.title = app_title
+
+    app = dash.Dash(__name__, external_stylesheets=[theme], title=app_title)
+    app.config.suppress_callback_exceptions = True
+
     app.layout = generate_layout(board)
 
-    if isnotebook():
-        app.run_server(mode=mode, host=host, port=port, proxy=proxy, debug=debug, **flask)
-    else:
-        app.run(host=host, port=port, proxy=proxy, debug=debug, **flask)
+    app.run(host=host, jupyter_mode=jupyter_mode, port=port, proxy=proxy, debug=debug, **flask)
 
 
-def deploy_app(board):
-    """
-    This method can be used as an alternative to the above for running the app in a production environment, e.g. with
-    gunicorn, using the server variable.
-    """
-    app.layout = generate_layout(board)
-
-    global server
-    server = app.server
+# def deploy_app(board):
+#     """
+#     This method can be used as an alternative to the above for running the app in a production environment, e.g. with
+#     gunicorn, using the server variable.
+#     """
+#     app.layout = generate_layout(board)
+#
+#     global server
+#     server = app.server

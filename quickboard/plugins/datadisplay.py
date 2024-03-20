@@ -1,8 +1,8 @@
-from dash import html
+from dash import html, callback
 from dash import dash_table
-from dash.dependencies import Input, Output, State, ALL
+from dash.dependencies import Input, Output
 
-from quickboard.dashsetup import app
+import pandas as pd
 from quickboard.primitives import Panel
 
 
@@ -33,7 +33,7 @@ class DataDisplay(Panel):
 
         super().__init__(header=header, main_content=self.datatable, **kwargs)
 
-        app.callback(
+        callback(
             Output(self.datatable, 'data'),
             Output(self.datatable, 'columns'),
             Input('data_store', 'data'),

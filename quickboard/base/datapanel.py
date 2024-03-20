@@ -1,8 +1,7 @@
-from dash import dcc, ctx
+from dash import dcc, ctx, callback
 from dash import dash_table
 from dash.dependencies import Input, Output, State, ALL
 
-from quickboard.dashsetup import app
 from quickboard.base import DynamicPanel
 
 
@@ -47,7 +46,7 @@ class DataPanel(DynamicPanel):
         else:
             interactive_data = Input('data_store', 'data')
 
-        app.callback(
+        callback(
             Output(self.datatable, 'data'),
             Output(self.datatable, 'columns'),
             Input('data_store', 'data'),

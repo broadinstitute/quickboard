@@ -3,7 +3,6 @@ from dash.exceptions import PreventUpdate
 import dash_bootstrap_components as dbc
 
 from quickboard.primitives import ControlPlugin
-from quickboard.dashsetup import app
 from dash.dependencies import Input, Output
 
 class Checklist(ControlPlugin):
