@@ -15,6 +15,8 @@ class Sidebar:
     def __init__(self, header_text='Data Controls', sidebar_plugins=[]):
         self.header = [html.H2(header_text, className="display-4"), html.Hr()]
         self.plugins = sidebar_plugins
+        for plugin in self.plugins:
+            plugin.setup_internal_callback()
 
         self.container = html.Div(
             children=self.header + [plugin.container for plugin in self.plugins],

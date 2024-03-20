@@ -15,11 +15,10 @@ class Panel:
     def __init__(self, header, main_content, **kwargs):
         self.header = html.H3(header, style=styles.PANEL_HEADER_STYLE) if type(header) == str else header
         self.header = header
-        self.main_content = main_content
+        self.main_content = main_content if isinstance(main_content, list) else [main_content]
 
-        self.container = dbc.Toast([
-            self.main_content
-        ],
+        self.container = dbc.Toast(
+            children=self.main_content,
             header=self.header,
             style=styles.PANEL_STYLE
         )

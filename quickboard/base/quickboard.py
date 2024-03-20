@@ -10,7 +10,7 @@ import quickboard.styles as styles
 class Quickboard:
     """
     Main class for making an easy dashboard out of modular components. Handles some global dynamic aspects of the
-    board while holding all of the pieces together.
+    board while holding all the pieces together.
     Inputs:
         sidebar_header = header text/object to use if no tabs
         sidebar_plugins = list of plugins to use in sidebar if no tabs
@@ -136,7 +136,6 @@ class Quickboard:
     def tab_switch_update(self, tab_name):
         set_tab_container = self.set_tab(tab_name)
         updated_sidebar_layout, updated_sidebar_style = self.update_sidebar_layout(tab_name)
-        # updated_sidebar_layout = self.update_sidebar_layout(tab_name)
 
         # Update content margins to match sidebar width
         updated_main_content_style = self.container.style | {'margin-left': updated_sidebar_style['width']}

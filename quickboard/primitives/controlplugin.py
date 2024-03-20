@@ -12,10 +12,11 @@ class ControlPlugin(Panel):
     Inputs:
         component = component from dcc or similar
         component_inputs = the inputs to set up the component
+        extra_top_content = extra Dash objects to include above main control component
         header = header text/object
     """
 
-    def __init__(self, component, component_inputs, header="", **kwargs):
+    def __init__(self, component, component_inputs, extra_top_content=[], header="", **kwargs):
         self.control_attributes = {}
         # Calibrate header based on input
         if isinstance(header, str):
@@ -24,7 +25,9 @@ class ControlPlugin(Panel):
             header = header
 
         self.control = component(**component_inputs)
-        super().__init__(header=header, main_content=self.control, **kwargs)
+        super().__init__(header=header, main_content=extra_top_content+[self.control], **kwargs)
+
+        self.setup_internal_callback()
 
     def serialize(self):
         """
@@ -43,3 +46,10 @@ class ControlPlugin(Panel):
         updated_panel = {}
 
         return df, updated_panel
+
+    def setup_internal_callback(self):
+        """
+        To be implemented by children classes. Declares callbacks to be used by internal components in the plugin, activated
+        later during the app setup to ensure compatibility of ids used. Gets called at end of self init and in Sidebar init.
+        """
+        pass
