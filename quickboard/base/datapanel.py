@@ -15,9 +15,8 @@ class DataPanel(DynamicPanel):
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
-        kwargs = extra keyword arguments become attributes of the object for extending functionality easily
     """
-    def __init__(self, data_source="data", header="", body="", plugins=[], plugin_wrap=2, **kwargs):
+    def __init__(self, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2):
         self.datatable = dash_table.DataTable(
             page_action='none',
             sort_action='native',
@@ -28,12 +27,12 @@ class DataPanel(DynamicPanel):
 
         super().__init__(
             header=header,
+            body=body,
             main_content=self.datatable,
             data_source=data_source,
             plugins=plugins,
-            body=body,
+            plugin_align=plugin_align,
             plugin_wrap=plugin_wrap,
-            **kwargs
         )
 
         # Table update callback

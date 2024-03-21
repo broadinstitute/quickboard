@@ -11,7 +11,7 @@ def generate_layout(board):
     Creates the layout of the app using a Quickboard object.
     """
     layout = html.Div([
-        board.container,
+        board,
         dcc.Store(id='data_store', data={'current_tab': "", 'sidebar_controls': []}),
     ])
 

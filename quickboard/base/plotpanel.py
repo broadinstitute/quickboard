@@ -16,10 +16,9 @@ class PlotPanel(DynamicPanel):
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
-        kwargs = extra keyword arguments become attributes of the object for extending functionality easily
     """
-    def __init__(self, plotter, plot_inputs, data_source="data", header="", body="",
-                 plugins=[], plugin_wrap=2, **kwargs):
+    def __init__(self, plotter, plot_inputs, data_source="data", header="", body="", plugins=[],
+                 plugin_align="bottom", plugin_wrap=2):
         # Plot specific attributes
         self.plot_inputs = plot_inputs
         self.plotter = plotter
@@ -32,7 +31,7 @@ class PlotPanel(DynamicPanel):
             plugins=plugins,
             body=body,
             plugin_wrap=plugin_wrap,
-            **kwargs
+            plugin_align=plugin_align
         )
 
         # Plot update callback

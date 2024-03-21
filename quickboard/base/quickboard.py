@@ -5,7 +5,7 @@ from quickboard.base.sidebar import Sidebar
 import quickboard.styles as styles
 
 
-class Quickboard:
+class Quickboard(html.Div):
     """
     Main class for making an easy dashboard out of modular components. Handles some global dynamic aspects of the
     board while holding all the pieces together.
@@ -18,20 +18,19 @@ class Quickboard:
     def __init__(self, sidebar_header="Data Controls", sidebar_plugins=[], tab_list=[], content_list=[]):
         self.style = styles.CONTENT_STYLE
         self.tab_list = tab_list
-        self.tabs_container = self.initialize_tabs(tab_list)
-        self.sidebar_container = self.initialize_sidebar(sidebar_header, sidebar_plugins)
+        self.tabs_wrapper = self.initialize_tabs(tab_list)
+        self.sidebar = self.initialize_sidebar(sidebar_header, sidebar_plugins)
 
         # Used in case user doesn't want to have tabs, but one page with some contents
-        self.content_list = html.Div([x.container for x in content_list])
+        self.content_list = content_list
 
-        self.container = html.Div(
-            children=[
-                self.sidebar_container,
+        self.children = [
+                self.sidebar,
                 self.content_list,
-                self.tabs_container
-            ],
-            style=self.style
-        )
+                self.tabs_wrapper
+            ]
+
+        super().__init__(children=self.children)
 
         #############
         # CALLBACKS #
@@ -42,9 +41,9 @@ class Quickboard:
         if len(tab_list) > 0:
             callback(
                 Output(self.current_tab_content, 'children'),
-                Output(self.sidebar_container, 'children'),
-                Output(self.sidebar_container, 'style'),
-                Output(self.container, 'style'),
+                Output(self.sidebar, 'children'),
+                Output(self.sidebar, 'style'),
+                Output(self, 'style'),
                 Input(self.tabs, 'value')
             )(self.tab_switch_update)
 
@@ -74,22 +73,23 @@ class Quickboard:
             self.tab_dict = {
                 tab.tab_label: tab for tab in tab_list
             }
-            tabs_container = html.Div(
+
+            tabs_wrapper = html.Div(
                 children=[
                     self.tabs,
                     self.current_tab_content
                 ]
             )
         else:
-            tabs_container = html.Div([])
+            tabs_wrapper = html.Div([])
 
-        return tabs_container
+        return tabs_wrapper
 
     def initialize_sidebar(self, sidebar_header, sidebar_plugins):
         if len(self.tab_list) > 0:
             first_tab = self.tab_list[0]
             self.sidebar = Sidebar(first_tab.sidebar_header, first_tab.sidebar_plugins)
-            return self.sidebar.container
+            return self.sidebar
         elif len(sidebar_plugins) != 0:
             self.sidebar = Sidebar(sidebar_header, sidebar_plugins)
 
@@ -101,7 +101,7 @@ class Quickboard:
                         'unique_id': id(plugin)
                     }
 
-            return self.sidebar.container
+            return self.sidebar
         else:
             self.style["margin-left"] = "2rem"
             return html.Div([])
@@ -111,7 +111,7 @@ class Quickboard:
         Callback method for updating the current tab, based on user click.
         """
         current_tab = self.tab_dict[tab_name]
-        return current_tab.container
+        return current_tab
 
     def update_sidebar_layout(self, tab_name):
         """
@@ -119,10 +119,9 @@ class Quickboard:
         """
         current_tab = self.tab_dict[tab_name]
         plugins = current_tab.sidebar_plugins
-        plugin_containers = [x.container for x in plugins]
 
         # Put hlines between plugins
-        hlines = [(plugin, html.Hr()) for plugin in plugin_containers]
+        hlines = [(plugin, html.Hr()) for plugin in plugins]
         sidebar_layout = [y for sublist in hlines for y in sublist][:-1]
 
         # Update sidebar width
@@ -132,13 +131,13 @@ class Quickboard:
         return [self.sidebar.header + sidebar_layout, new_style]
 
     def tab_switch_update(self, tab_name):
-        set_tab_container = self.set_tab(tab_name)
+        selected_tab = self.set_tab(tab_name)
         updated_sidebar_layout, updated_sidebar_style = self.update_sidebar_layout(tab_name)
 
         # Update content margins to match sidebar width
-        updated_main_content_style = self.container.style | {'margin-left': updated_sidebar_style['width']}
+        updated_main_content_style = self.style | {'margin-left': updated_sidebar_style['width']}
 
-        return [set_tab_container, updated_sidebar_layout, updated_sidebar_style, updated_main_content_style]
+        return [selected_tab, updated_sidebar_layout, updated_sidebar_style, updated_main_content_style]
 
     def update_data(self, data_state={}, control_values=[], tab_name=""):
         """

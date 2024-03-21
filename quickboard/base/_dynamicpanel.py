@@ -20,10 +20,8 @@ class DynamicPanel(Panel):
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_align = placement of plugins; either bottom, top, left, or right
         plugin_wrap = number of plugins to load per row in plugin grid
-        kwargs = extra keyword arguments become attributes of the object for extending functionality easily
     """
-    def __init__(self, main_content, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2, **kwargs):
-        super().__init__(header, main_content, **kwargs)
+    def __init__(self, main_content, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2):
         self.data_manager = DataManager(data_source)
         self.data_manager.load_data()
 
@@ -45,11 +43,12 @@ class DynamicPanel(Panel):
         full_content_widths = [25, 100] if plugin_align == "left" else [100, 25] if plugin_align == "right" else []
         self.full_content_grid = ContentGrid(header="", content_list=full_content, content_widths=full_content_widths, col_wrap=full_wrap)
 
-        self.container = html.Div([
-            self.header, self.body, html.Br(), self.full_content_grid.container # self.main_content, html.Br(), self.plugin_frame.container
-        ],
-            style=styles.PANEL_STYLE
-        )
+        self.children = [
+            self.body,
+            html.Br(),
+            self.full_content_grid
+        ]
+        super().__init__(header, main_content=self.children)
 
     def data_transform(self, df):
         """

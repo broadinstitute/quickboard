@@ -1,12 +1,10 @@
-from dash import dcc
 from dash import html
 import dash_bootstrap_components as dbc
 
 import quickboard.styles as styles
-from quickboard.primitives import Panel
 
 
-class ControlPlugin(Panel):
+class ControlPlugin(dbc.Toast):
     """
     Creates an HTML component representing controls for a DynamicPanel, as a plugin.
     Inputs:
@@ -16,7 +14,7 @@ class ControlPlugin(Panel):
         header = header text/object
     """
 
-    def __init__(self, component, component_inputs, extra_top_content=[], header="", **kwargs):
+    def __init__(self, component, component_inputs, extra_top_content=[], header=""):
         self.control_attributes = {}
         # Calibrate header based on input
         if isinstance(header, str):
@@ -25,7 +23,14 @@ class ControlPlugin(Panel):
             header = header
 
         self.control = component(**component_inputs)
-        super().__init__(header=header, main_content=extra_top_content+[self.control], **kwargs)
+
+        self.children = extra_top_content+[self.control]
+        self.style = styles.PANEL_STYLE
+        super().__init__(
+            header=header,
+            header_style={'color': '#000000'},
+            children=self.children
+        )
 
         self.setup_internal_callback()
 

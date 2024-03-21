@@ -3,7 +3,7 @@ from dash import html
 import quickboard.styles as styles
 
 
-class BaseTab:
+class BaseTab(html.Div):
     """
     The basic class for creating tabs in an app.
     Inputs:
@@ -28,10 +28,8 @@ class BaseTab:
                     'unique_id': id(plugin)
                 }
 
-        content_containers = [x.container for x in content_list]
-        for i in range(len(content_containers) - 1):
-            content_containers.insert(2 * i + 1, html.Br())
+        for i in range(len(content_list) - 1):
+            content_list.insert(2 * i + 1, html.Br())
 
-        self.container = html.Div(
-            [html.H1(tab_header, style=styles.TAB_HEADER_STYLE)] + content_containers,
-        )
+        self.children = [html.H1(tab_header, style=styles.TAB_HEADER_STYLE)] + content_list
+        super().__init__(children=self.children)

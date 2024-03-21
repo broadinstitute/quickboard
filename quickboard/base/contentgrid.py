@@ -5,7 +5,7 @@ import quickboard.styles as styles
 import itertools
 
 
-class ContentGrid:
+class ContentGrid(html.Div):
     """
     An object for storing other components into a grid.
     Inputs:
@@ -23,7 +23,7 @@ class ContentGrid:
         for i, row in enumerate(itertools.zip_longest(*(iter(content_list),) * col_wrap)):
             table_row = html.Tr([
                 html.Td(
-                    [x.container],
+                    children=[x],
                     style={
                         "width": f'{content_widths[col_wrap * i + j]}%' if col_wrap * i + j < len(content_widths) else "100%",
                         "padding": "5px"
@@ -32,9 +32,9 @@ class ContentGrid:
             ])
             table_rows.append(table_row)
 
-        self.container = html.Div([
+        self.style = styles.CONTENT_GRID_STYLE if border else styles.CONTENT_GRID_NO_BORDER_STYLE
+        self.children = [
             self.header,
             html.Table(table_rows, style={"width": "100%", 'table-layout': 'fixed'})
-        ],
-            style=styles.CONTENT_GRID_STYLE if border else styles.CONTENT_GRID_NO_BORDER_STYLE
-        )
+        ]
+        super().__init__(children=self.children)
