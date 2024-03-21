@@ -1,9 +1,7 @@
-from dash import dcc
-
-from quickboard.primitives import ControlPlugin
+from quickboard.plugins.templates import RadioButtons
 
 
-class DataFilterRadioButtons(ControlPlugin):
+class DataFilterRadioButtons(RadioButtons):
     """
     A plugin for filtering data to be displayed by removing records where a certain column's value does not equal the
     selected radio button value.
@@ -13,20 +11,9 @@ class DataFilterRadioButtons(ControlPlugin):
         header = header text/object
     """
     def __init__(self, data_col, data_values, header=""):
-        component = dcc.RadioItems
-        component_inputs = {
-            'options': [
-                {'label': x, 'value': x} for x in data_values
-            ],
-            'value': data_values[0],
-            'labelStyle': {'display': 'block'},
-            'inputStyle': {"margin-right": '10px'}
-        }
-
         super().__init__(
             header=header,
-            component=component,
-            component_inputs=component_inputs
+            data_values=data_values
         )
 
         self.control_attributes = {'data_col': data_col}

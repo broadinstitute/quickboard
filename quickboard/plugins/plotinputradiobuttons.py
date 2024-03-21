@@ -1,9 +1,7 @@
-from dash import dcc
-
-from quickboard.primitives import ControlPlugin
+from quickboard.plugins.templates import RadioButtons
 
 
-class PlotInputRadioButtons(ControlPlugin):
+class PlotInputRadioButtons(RadioButtons):
     """
     A plugin for modifying a PlotPanel's plotting behavior. The `plot_input` value can be dynamically changed based on
     the selection via radio buttons.
@@ -13,20 +11,9 @@ class PlotInputRadioButtons(ControlPlugin):
         header = header text/object
     """
     def __init__(self, plot_input, data_values, header=""):
-        component = dcc.RadioItems
-        component_inputs = {
-            'options': [
-                {'label': x, 'value': x} for x in data_values
-            ],
-            'value': data_values[0],
-            'labelStyle': {'display': 'block'},
-            'inputStyle': {"margin-right": '10px'}
-        }
-
         super().__init__(
             header=header,
-            component=component,
-            component_inputs=component_inputs
+            data_values=data_values
         )
 
         self.control_attributes = {'plot_input': plot_input}

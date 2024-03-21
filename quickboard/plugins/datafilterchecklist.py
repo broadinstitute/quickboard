@@ -9,11 +9,11 @@ class DataFilterChecklist(Checklist):
         data_values = list of possible values to populate the checklist
         header = header text/object
     """
-    def __init__(self, data_col, data_values, header="", **kwargs):
+    def __init__(self, data_col, data_values, header="", toggle_all_button=True):
         super().__init__(
             data_values=data_values,
             header=header,
-            **kwargs
+            toggle_all_button=toggle_all_button
         )
 
         self.control_attributes = {'data_col': data_col}

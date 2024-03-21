@@ -1,10 +1,7 @@
-import numpy as np
-from dash import dcc
-
-from quickboard.primitives import ControlPlugin
+from quickboard.plugins.templates.rangeslider import RangeSlider
 
 
-class DataFilterRangeSlider(ControlPlugin):
+class DataFilterRangeSlider(RangeSlider):
     """
     A plugin for filtering data to be displayed by removing records where a certain column's value does not lie in
     the range specified by the slider.
@@ -23,32 +20,20 @@ class DataFilterRangeSlider(ControlPlugin):
         header = header text/object
     """
     def __init__(self, data_col, slider_min, slider_max, slider_default_values=None, slider_step=None,
-                 slider_marks={}, tooltip={}, updatemode='mouseup', edges_infinite=False, header="", **kwargs):
-        component = dcc.RangeSlider
-
-        component_inputs = {
-            'min': slider_min,
-            'max': slider_max,
-            'value': slider_default_values,
-            'step': slider_step,
-            'included': True,
-            'marks': slider_marks,
-            'tooltip': tooltip,
-            'updatemode': updatemode
-        }
-
+                 slider_marks={}, tooltip={}, updatemode='mouseup', edges_infinite=False, header=""):
         super().__init__(
-            header=header,
-            component=component,
-            component_inputs=component_inputs
+            slider_min=slider_min,
+            slider_max=slider_max,
+            slider_default_values=slider_default_values,
+            slider_step=slider_step,
+            slider_marks=slider_marks,
+            tooltip=tooltip,
+            updatemode=updatemode,
+            edges_infinite=edges_infinite,
+            header=header
         )
 
-        self.control_attributes = {
-            'data_col': data_col,
-            'slider_min': slider_min,
-            'slider_max': slider_max,
-            'edges_infinite': edges_infinite
-        }
+        self.control_attributes = self.control_attributes | {'data_col': data_col}
 
     @staticmethod
     def configure(control_attributes, dp, df, control_value):

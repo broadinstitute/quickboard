@@ -13,7 +13,7 @@ class Checklist(ControlPlugin):
         header = header text/object
         toggle_all_button = determines whether to include a "toggle all" button with checklist
     """
-    def __init__(self, data_values, header="", toggle_all_button=False, **kwargs):
+    def __init__(self, data_values, header="", toggle_all_button=True):
         component = dcc.Checklist
         component_inputs = {
             'options': [
@@ -41,8 +41,7 @@ class Checklist(ControlPlugin):
             header=header,
             component=component,
             component_inputs=component_inputs,
-            extra_top_content=extra_top_content,
-            **kwargs
+            extra_top_content=extra_top_content
         )
 
     # Overrides parent method
