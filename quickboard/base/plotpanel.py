@@ -18,7 +18,7 @@ class PlotPanel(DynamicPanel):
         plugin_wrap = number of plugins to load per row underneath main object
     """
     def __init__(self, plotter, plot_inputs, data_source="data", header="", body="", plugins=[],
-                 plugin_align="bottom", plugin_wrap=2):
+                 plugin_align="bottom", plugin_wrap=2, full_border_size=0, all_contents_border_size=2, main_content_border_size=0, plugin_border_size=0):
         # Plot specific attributes
         self.plot_inputs = plot_inputs
         self.plotter = plotter
@@ -26,12 +26,16 @@ class PlotPanel(DynamicPanel):
 
         super().__init__(
             header=header,
-            main_content=self.graph,
+            dynamic_content=self.graph,
             data_source=data_source,
             plugins=plugins,
             body=body,
             plugin_wrap=plugin_wrap,
-            plugin_align=plugin_align
+            plugin_align=plugin_align,
+            full_border_size=full_border_size,
+            all_contents_border_size=all_contents_border_size,
+            main_content_border_size=main_content_border_size,
+            plugin_border_size=plugin_border_size
         )
 
         # Plot update callback

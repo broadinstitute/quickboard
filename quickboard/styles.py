@@ -67,13 +67,6 @@ CONTENT_GRID_STYLE = {
     "overflow": "auto"
 }
 
-CONTENT_GRID_NO_BORDER_STYLE = {
-    "padding": "10px",
-    "display": "grid",
-
-    "overflow": "auto"
-}
-
 CONTENT_GRID_HEADER_STYLE = {
     "text-align": "center"
 }

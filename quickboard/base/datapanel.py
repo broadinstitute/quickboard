@@ -16,7 +16,7 @@ class DataPanel(DynamicPanel):
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
     """
-    def __init__(self, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2):
+    def __init__(self, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2, full_border_size=0, all_contents_border_size=2, main_content_border_size=0, plugin_border_size=0):
         self.datatable = dash_table.DataTable(
             page_action='none',
             sort_action='native',
@@ -28,11 +28,15 @@ class DataPanel(DynamicPanel):
         super().__init__(
             header=header,
             body=body,
-            main_content=self.datatable,
+            dynamic_content=self.datatable,
             data_source=data_source,
             plugins=plugins,
             plugin_align=plugin_align,
             plugin_wrap=plugin_wrap,
+            full_border_size=full_border_size,
+            all_contents_border_size=all_contents_border_size,
+            main_content_border_size=main_content_border_size,
+            plugin_border_size=plugin_border_size
         )
 
         # Table update callback

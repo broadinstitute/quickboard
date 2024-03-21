@@ -14,12 +14,12 @@ class DataDisplay(Panel):
         header = header text/object
         listen = list of control objects to get notified of changes in them
     """
-    def __init__(self, data_source, header="", listen=[], **kwargs):
+    def __init__(self, data_source, header="", listen=[]):
         # Calibrate header based on input and control type
         if isinstance(header, str):
-            header = html.H5(header)
+            self.header = html.H5(header)
         else:
-            header = header
+            self.header = header
 
         self.data_source = data_source
 
@@ -31,7 +31,7 @@ class DataDisplay(Panel):
             style_table={'height': '150px', 'overflow': 'auto', 'overflowX': 'scroll', 'width': '100%'}
         )
 
-        super().__init__(header=header, main_content=self.datatable, **kwargs)
+        super().__init__(main_content=[self.header, self.datatable])
 
         callback(
             Output(self.datatable, 'data'),

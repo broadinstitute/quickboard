@@ -21,34 +21,36 @@ class DynamicPanel(Panel):
         plugin_align = placement of plugins; either bottom, top, left, or right
         plugin_wrap = number of plugins to load per row in plugin grid
     """
-    def __init__(self, main_content, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2):
+    def __init__(self, dynamic_content, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2,
+                 full_border_size=0, all_contents_border_size=2, main_content_border_size=0, plugin_border_size=0):
         self.data_manager = DataManager(data_source)
         self.data_manager.load_data()
+
+        self.header = html.H3(header, style=styles.PANEL_HEADER_STYLE) if type(header) == str else header
 
         # Add optional body text above main content under header
         self.body = html.Div([dcc.Markdown(body, mathjax=True)])
 
-        self.main_content = Panel("", html.Div([main_content], style={'border-width': '1px', 'border-style': 'solid',
-                                                            'border-color': 'black'}))
+        self.dynamic_content = Panel(main_content=dynamic_content, border_size=main_content_border_size)
 
         # Configure plugin related attributes
         self.plugins = plugins
-        border = False if len(plugins) == 0 else True
-        self.plugin_frame = ContentGrid(header="", content_list=plugins, col_wrap=plugin_wrap, border=border)
+        self.plugin_frame = ContentGrid(header="", content_list=plugins, col_wrap=plugin_wrap, border_size=plugin_border_size)
 
         # Control placement of plugins relative to content
         assert plugin_align in ["bottom", "top", "left", "right"]
         full_wrap = 1 if plugin_align == "bottom" or plugin_align == "top" else 2
-        full_content = [self.plugin_frame, self.main_content] if plugin_align in ["top", "left"] else [self.main_content, self.plugin_frame]
+        full_content = [self.plugin_frame, self.dynamic_content] if plugin_align in ["top", "left"] else [self.dynamic_content, self.plugin_frame]
         full_content_widths = [25, 100] if plugin_align == "left" else [100, 25] if plugin_align == "right" else []
-        self.full_content_grid = ContentGrid(header="", content_list=full_content, content_widths=full_content_widths, col_wrap=full_wrap)
+        self.full_content_grid = ContentGrid(header="", content_list=full_content, content_widths=full_content_widths, col_wrap=full_wrap, border_size=all_contents_border_size)
 
         self.children = [
+            self.header,
             self.body,
             html.Br(),
             self.full_content_grid
         ]
-        super().__init__(header, main_content=self.children)
+        super().__init__(main_content=self.children, border_size=full_border_size)
 
     def data_transform(self, df):
         """

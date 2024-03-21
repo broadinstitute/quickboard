@@ -4,8 +4,10 @@ import quickboard.styles as styles
 
 import itertools
 
+from quickboard.primitives import Panel
 
-class ContentGrid(html.Div):
+
+class ContentGrid(Panel):
     """
     An object for storing other components into a grid.
     Inputs:
@@ -13,9 +15,9 @@ class ContentGrid(html.Div):
         content_list = list of objects to store in the grid
         col_wrap = number of objects to display within a row
         content_widths = list of integers between 0 and 100 for percent width for corresponding content_list item
-        border = boolean to determine if the grid has a surrounding border
+        border_size = size in pixels for border
     """
-    def __init__(self, header="", content_list=[], col_wrap=2, content_widths=[], border=True):
+    def __init__(self, header="", content_list=[], col_wrap=2, content_widths=[], border_size=2):
         self.header = html.H2(header, style=styles.CONTENT_GRID_HEADER_STYLE) if type(header) == str else header
 
         table_rows = []
@@ -32,9 +34,9 @@ class ContentGrid(html.Div):
             ])
             table_rows.append(table_row)
 
-        self.style = styles.CONTENT_GRID_STYLE if border else styles.CONTENT_GRID_NO_BORDER_STYLE
+        self.style = styles.CONTENT_GRID_STYLE
         self.children = [
             self.header,
             html.Table(table_rows, style={"width": "100%", 'table-layout': 'fixed'})
         ]
-        super().__init__(children=self.children)
+        super().__init__(main_content=self.children, border_size=border_size)
