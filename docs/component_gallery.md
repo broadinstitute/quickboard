@@ -41,10 +41,11 @@ Tip: If you forget the inputs and usage of a particular class, use the `help` co
    2. [DataPanel](#datapanel)
 2. [Plugins](#plugins)
    1. [DataFilterRadioButtons](#datafilterradiobuttons)
-   2. [DataFilterChecklist](#datafilterchecklist)
-   3. [DataFilterSlider](#datafilterslider)
-   4. [DataFilterRangeSlider](#datafilterrangeslider)
-   5. [PlotInputRadioButtons](#plotinputradiobuttons)
+   2. [DataFilterDropdown](#datafilterdropdown)
+   3. [DataFilterChecklist](#datafilterchecklist)
+   4. [DataFilterSlider](#datafilterslider)
+   5. [DataFilterRangeSlider](#datafilterrangeslider)
+   6. [PlotInputRadioButtons](#plotinputradiobuttons)
 3. [Interactive Plot Data](#interactive-plot-data)
    1. [Hover/Click Data Plot](#hover--click-data-plot)
    2. [Selected Data Plot](#selected-data-plot)
@@ -187,6 +188,46 @@ Simply add `'range_y': [50, 85]` to the `plot_inputs` dict.
 
 ---
 
+### DataFilterDropdown
+
+#### Demo
+
+![DataFilterDropdown](images/gallery/DataFilterDropdown_demo.gif "Like radio buttons but dropdown.")
+
+#### Code
+
+```
+my_plot = qbb.PlotPanel(
+    plotter=px.scatter,
+    plot_inputs={
+        'x': 'year',
+        'y': 'lifeExp',
+        'title': "Life Expectancy over the Years for Selected Country"
+    },
+    data_source=df,
+    plugins=[
+        plg.DataFilterDropdown(
+            header="Select a country",
+            data_col="country",
+            data_values=["United States", "Canada", "Mexico"]
+        )
+    ]
+)
+
+start_app(my_plot, mode="external", port=8055)
+```
+
+#### Explanation
+
+This works identically to the `DataFilterRadioButton` example above, but using a Dropdown component instead of Radio 
+Buttons to make the selection.
+
+#### Tips & Tricks
+
+Same as the `DataFilterRadioButton` example above.
+
+---
+
 ### DataFilterChecklist
 
 #### Demo
@@ -213,7 +254,8 @@ my_plot = qbb.PlotPanel(
         plg.DataFilterChecklist(
             header="Select countries to include",
             data_col="country",
-            data_values=countries
+            data_values=countries,
+            toggle_all_button=False    # Switch to True (default) for All/None toggle buttons
         )
     ]
 )
