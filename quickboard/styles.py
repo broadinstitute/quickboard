@@ -37,25 +37,6 @@ TAB_HEADER_STYLE = {
     "text-align": "center"
 }
 
-#### PLOT TABLES
-
-
-PLOT_GROUP_STYLE = {
-    "padding": "10px",
-    "display": "grid",
-    
-    "border-width": "2px",
-    "border-style": "solid",
-    "border-color": "black",
-    
-    "overflow": "auto"
-}
-
-PLOT_GROUP_HEADER_STYLE = {
-    "text-align": "center"
-}
-
-
 CONTENT_GRID_STYLE = {
     "padding": "10px",
     "display": "grid",
@@ -85,74 +66,4 @@ PANEL_STYLE = {
     "border-color": "black",
 
     "width": "100%"
-}
-
-
-#### PLOT STYLES
-
-PLOT_FRAME_STYLE = {
-    "padding": "10px",
-    
-    "border-width": "2px",
-    "border-style": "solid",
-    "border-color": "black",
-}
-
-PLOT_FRAME_HEADER_STYLE = {
-    "text-align": "center"
-}
-
-
-CHECKLIST_STYLE = {
-    "padding": "10px",
-    
-    "border-width": "1px",
-    "border-style": "solid",
-    "border-color": "black",
-    
-    "width": "200px",
-    "height": "150px"
-}
-
-
-
-#### CONTROL STYLES
-
-CONTROL_FRAME_STYLE = {
-    "padding": "10px",
-    
-    "border-width": "1px",
-    "border-style": "solid",
-    "border-color": "black",
-    
-    # "height": "200px",
-    # "position": "relative"
-}
-
-
-CONTROL_STYLE = {
-    "padding": "5px",
-
-    "border-width": "1px",
-    "border-style": "solid",
-    "border-color": "black"
-}
-
-
-PLOT_CONTROL_STYLE = {
-    "padding": "5px",
-    
-    "border-width": "1px",
-    "border-style": "solid",
-    "border-color": "black",
-}
-
-
-# Delete after refactor
-CONTROL_OBJECT_STYLE = {
-    "padding": "5px",
-
-    "border-width": "1px",
-    "border-style": "solid",
-    "border-color": "black"
 }

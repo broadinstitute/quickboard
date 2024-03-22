@@ -1,10 +1,12 @@
 ## Guided Example
 
+> Last Updated: v0.4.0
+
 This is a beginner's guide to creating a larger scale app than the examples shown in the 
 [Component Gallery](component_gallery.md). To demonstrate how to use the Quickboard components together, let's work 
 through a simple example. We're going to recreate the following board.
 
-![The finished product](images/beginner_example/guide_final.jpg "Look how short the code at the end is for all of this!")
+![The finished product](images/beginner_example/guide_final.png "Look how short the code at the end is for all of this!")
 
 In this guide, we'll run code using a Jupyter notebook. All code blocks should be thought of as cells in the notebook,
 though it should also work fine to gather the main pieces into a `.py` file and run it.
@@ -27,6 +29,8 @@ First we have `data_a.tsv`, generated with:
 import numpy as np
 import pandas as pd
 
+np.random.seed(0)
+
 data_a = pd.DataFrame({'label': ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']})
 data_a['size'] = np.random.choice(range(1,6), len(data_a))
 data_a['weight'] = 5 * np.random.random(len(data_a)) + 2
@@ -44,45 +48,45 @@ data_b['day'] = np.random.choice(['Mon', 'Wed', 'Fri'], len(data_b))
 data_b['batch'] = np.random.choice(['batch1', 'batch2'], len(data_b))
 ```
 
-Here is what they look like. For `data_a.tsv`:
+Here is what they look like. For `data_a.tsv` (generated using `print(data_a.to_markdown())`:
 
 |    | label   |   size |   weight | day   | batch   |
 |---:|:--------|-------:|---------:|:------|:--------|
-|  0 | a       |      2 |     4.04 | Mon   | batch2  |
-|  1 | b       |      3 |     5.64 | Wed   | batch2  |
-|  2 | c       |      1 |     6.61 | Wed   | batch2  |
-|  3 | d       |      3 |     2.54 | Wed   | batch1  |
-|  4 | e       |      5 |     4.29 | Wed   | batch2  |
-|  5 | f       |      3 |     2.1  | Fri   | batch2  |
-|  6 | g       |      2 |     4.83 | Fri   | batch1  |
-|  7 | h       |      5 |     4.79 | Fri   | batch1  |
-|  8 | i       |      1 |     2.54 | Wed   | batch1  |
-|  9 | j       |      5 |     2.46 | Wed   | batch1  |
-| 10 | k       |      3 |     2.15 | Mon   | batch1  |
-| 11 | l       |      5 |     4.5  | Fri   | batch1  |
-| 12 | m       |      3 |     6.34 | Fri   | batch2  |
+|  0 | a       |      5 |     4.39 | Wed   | batch1  |
+|  1 | b       |      1 |     6.06 | Fri   | batch1  |
+|  2 | c       |      4 |     4.4  | Mon   | batch1  |
+|  3 | d       |      4 |     3.96 | Wed   | batch2  |
+|  4 | e       |      4 |     6.18 | Wed   | batch2  |
+|  5 | f       |      2 |     3.69 | Wed   | batch1  |
+|  6 | g       |      4 |     5.24 | Mon   | batch1  |
+|  7 | h       |      3 |     3.84 | Fri   | batch1  |
+|  8 | i       |      5 |     6.79 | Mon   | batch2  |
+|  9 | j       |      1 |     2.7  | Fri   | batch2  |
+| 10 | k       |      1 |     6.35 | Fri   | batch1  |
+| 11 | l       |      5 |     4.37 | Mon   | batch2  |
+| 12 | m       |      3 |     6    | Fri   | batch1  |
 
 And for `data_b.tsv`:
 
 |    | label   |   size |   measurement | day   | batch   |
 |---:|:--------|-------:|--------------:|:------|:--------|
-|  0 | a       |      9 |       6.22343 | Wed   | batch1  |
-|  1 | b       |      5 |       7.545   | Mon   | batch2  |
-|  2 | c       |      6 |       5.98645 | Fri   | batch1  |
-|  3 | d       |      7 |       8.30217 | Mon   | batch1  |
-|  4 | e       |      7 |       4.88089 | Wed   | batch1  |
-|  5 | f       |      5 |       9.09543 | Fri   | batch1  |
-|  6 | g       |      8 |       5.43039 | Wed   | batch1  |
-|  7 | h       |      9 |       7.51989 | Mon   | batch1  |
-|  8 | i       |      4 |       7.95468 | Mon   | batch2  |
-|  9 | j       |      6 |       6.99687 | Mon   | batch1  |
-| 10 | k       |      7 |       7.94129 | Wed   | batch1  |
-| 11 | l       |      8 |       7.08559 | Fri   | batch2  |
-| 12 | m       |      9 |       6.02301 | Fri   | batch2  |
-| 13 | n       |      9 |       8.57015 | Wed   | batch2  |
-| 14 | o       |      8 |       4.56614 | Mon   | batch2  |
-| 15 | p       |      6 |       7.72713 | Mon   | batch2  |
-| 16 | q       |      8 |       9.6404  | Wed   | batch2  |
+|  0 | a       |      6 |       7.43992 | Mon   | batch1  |
+|  1 | b       |      4 |       9.71264 | Fri   | batch2  |
+|  2 | c       |      5 |       7.56953 | Mon   | batch1  |
+|  3 | d       |      5 |       7.44541 | Wed   | batch2  |
+|  4 | e       |      5 |       9.9671  | Fri   | batch2  |
+|  5 | f       |      5 |       7.07295 | Fri   | batch1  |
+|  6 | g       |      7 |       5.90058 | Wed   | batch1  |
+|  7 | h       |      7 |       6.32288 | Mon   | batch2  |
+|  8 | i       |      6 |       7.36457 | Wed   | batch1  |
+|  9 | j       |      7 |       5.36605 | Wed   | batch2  |
+| 10 | k       |      4 |       7.72327 | Mon   | batch1  |
+| 11 | l       |      7 |       5.22041 | Fri   | batch2  |
+| 12 | m       |      9 |       8.44842 | Fri   | batch1  |
+| 13 | n       |      8 |       9.647   | Fri   | batch2  |
+| 14 | o       |      5 |       7.63769 | Fri   | batch1  |
+| 15 | p       |      6 |       3.095   | Wed   | batch2  |
+| 16 | q       |      8 |       7.35992 | Fri   | batch1  |
 
 Let's visualize some plots using these data sets.
 
@@ -186,7 +190,7 @@ start_app(board, mode="external", port=8050)    # Note: The default port is 8050
 Running this in Jupyter should output a link to `127.0.0.1:8050`. If you click the link, or go to that url in a browser
 after running in a terminal (with the `mode` input removed in that case), you can finally see the board!
 
-![Our first glance at what Quickboard can do!](images/beginner_example/TabA_firstplot.jpg "All tabs are automatically scrollable!")
+![Our first glance at what Quickboard can do!](images/beginner_example/TabA_firstplot.png "All tabs are automatically scrollable!")
 
 There it is! But it's still a lot of overhead for just one plot. Let's try adding some more stuff.
 
@@ -226,7 +230,7 @@ Rerun this code block and the ones following it, and run the `start_app` functio
 (Tip: If you get `Duplicate callback outputs` errors when trying to modify and rerun, try restarting the notebook 
 kernel.)
 
-![That looks better!](images/beginner_example/TabA_secondplot.jpg "That was easy!")
+![That looks better!](images/beginner_example/TabA_secondplot.png "That was easy!")
 
 This example should show some of the power of building up a board with modular components like this. An investment in 
 the higher layer objects makes it very easy to drop in new features. The new hierarchy looks like this:
@@ -280,13 +284,16 @@ TabA = qbb.BaseTab(
 
 Now when you rerun the code, you'll see our plugin on the left.
 
-![Now we've got our first plugin!](images/beginner_example/TabA_sidebarplugin.jpg "Unlimited power!")
+![Now we've got our first plugin!](images/beginner_example/TabA_sidebarplugin.png "Unlimited power!")
 
 Now our board is interactive beyond the usual Plotly capabilities. Try clicking the checklist buttons and watch the
 plots update in real time! Can you see what's happening?
 
 As the name implies, the `DataFilterChecklist` plugin filters the data so that the `day` column is contained in the list
 of selected values. Because we made it a sidebar plugin, this affects all of the plots on the page.
+
+Note the checklist plugin comes with the "All" or "None" toggles for free. This can be turned off using the 
+`toggle_all_button` input to the plugin constructor.
 
 #### Plot Plugins
 
@@ -320,7 +327,7 @@ You can rerun the code and see what appears. There's now a similar checklist bel
 filtering the data, but just for that plot. If you restrict on both the sidebar and the plot plugins, you'll get the
 intersection of both control effects. You can add a similar control to the other plot to make it look a little nicer.
 
-![Added some plot plugins!](images/beginner_example/TabA_plotplugins.jpg "Not enough days in the week...")
+![Added some plot plugins!](images/beginner_example/TabA_plotplugins.png "Not enough days in the week...")
 
 Our hierarchy now looks like:
 ```
@@ -371,7 +378,7 @@ LabelBarPlot = qbb.PlotPanel(
 
 If the code looks like it's getting a little messy, we can always refactor with something like:
 ```
-myplg = plg.DataFilterChecklist(...)    # But make sure all of the id's are valid!
+myplg = plg.DataFilterChecklist(...)
 ...
     plugins=[
         myplg, ...
@@ -381,7 +388,7 @@ myplg = plg.DataFilterChecklist(...)    # But make sure all of the id's are vali
 
 Let's add it to our code and see what we get.
 
-![We've got radio buttons!](images/beginner_example/TabA_radioplugin.jpg "How many possible plots can we make now by just clicking?")
+![We've got radio buttons!](images/beginner_example/TabA_radioplugin.png "How many possible plots can we make now by just clicking?")
 
 Now we can toggle between seeing `size` and `weight` on the y-axis with the click of a button! 
 
@@ -436,7 +443,7 @@ Here is what the hierarchy looks like at the very end:
 |    ├─ BaseTab (B)
 ```
 
-Here is the final code in full:
+Here is the final code in full you can run from start to finish:
 ```
 import plotly.express as px
 
@@ -444,6 +451,21 @@ import quickboard.base as qbb
 import quickboard.plugins as plg
 from quickboard.app import start_app
 
+
+np.random.seed(0)
+
+data_a = pd.DataFrame({'label': ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']})
+data_a['size'] = np.random.choice(range(1,6), len(data_a))
+data_a['weight'] = 5 * np.random.random(len(data_a)) + 2
+data_a['weight'] = data_a['weight'].apply(lambda x: round(x, 2))
+data_a['day'] = np.random.choice(['Mon', 'Wed', 'Fri'], len(data_a))
+data_a['batch'] = np.random.choice(['batch1', 'batch2'], len(data_a))
+
+data_b = pd.DataFrame({'label': ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q']})
+data_b['size'] = np.random.choice(range(4,10), len(data_b))
+data_b['measurement'] = 7 * np.random.random(len(data_b)) + 3
+data_b['day'] = np.random.choice(['Mon', 'Wed', 'Fri'], len(data_b))
+data_b['batch'] = np.random.choice(['batch1', 'batch2'], len(data_b))
 
 SizeWeightPlot = qbb.PlotPanel(
     header='My Demo Scatterplot',
