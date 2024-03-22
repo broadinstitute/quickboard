@@ -15,8 +15,13 @@ class DataPanel(DynamicPanel):
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
+        full_border_size = size of border around entire object
+        all_contents_border_size = size of border around all contents
+        dynamic_content_border_size = size of border around dynamic content
+        plugin_border_size = size of border around plugin group
     """
-    def __init__(self, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2, full_border_size=0, all_contents_border_size=2, main_content_border_size=0, plugin_border_size=0):
+    def __init__(self, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2,
+                 full_border_size=0, all_contents_border_size=2, dynamic_content_border_size=0, plugin_border_size=0):
         self.datatable = dash_table.DataTable(
             page_action='none',
             sort_action='native',
@@ -35,7 +40,7 @@ class DataPanel(DynamicPanel):
             plugin_wrap=plugin_wrap,
             full_border_size=full_border_size,
             all_contents_border_size=all_contents_border_size,
-            main_content_border_size=main_content_border_size,
+            dynamic_content_border_size=dynamic_content_border_size,
             plugin_border_size=plugin_border_size
         )
 

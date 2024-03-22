@@ -14,7 +14,8 @@ class BaseTab(html.Div):
         sidebar_plugins = plugins to use in the sidebar while on this tab
         sidebar_width = width to use for sidebar style on this tab
     """
-    def __init__(self, tab_label, tab_header="", content_list=[], sidebar_header="Data Controls", sidebar_plugins=[], sidebar_width="18rem"):
+    def __init__(self, tab_label, tab_header="", content_list=[], sidebar_header="Data Controls", sidebar_plugins=[],
+                 sidebar_width="18rem"):
         self.tab_label = tab_label
         self.tab = dcc.Tab(value=tab_label, label=tab_label)
         self.content_list = content_list
@@ -28,6 +29,7 @@ class BaseTab(html.Div):
                     'control_type': 'sidebar_control',
                     'unique_id': id(plugin)
                 }
+                plugin.setup_internal_callback()
 
         for i in range(len(content_list) - 1):
             content_list.insert(2 * i + 1, html.Br())

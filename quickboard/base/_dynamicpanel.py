@@ -13,16 +13,20 @@ class DynamicPanel(Panel):
     """
     A template for creating larger panels holding objects which can be updated via different controls and plugins.
     Inputs:
-        main_content = main HTML object to hold
+        dynamic_content = main HTML object to hold
         data_source = key to use in tab data dictionary to get data inputs for this panel
         header = header text/object
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_align = placement of plugins; either bottom, top, left, or right
         plugin_wrap = number of plugins to load per row in plugin grid
+        full_border_size = size of border around entire object
+        all_contents_border_size = size of border around all contents
+        dynamic_content_border_size = size of border around dynamic content
+        plugin_border_size = size of border around plugin group
     """
     def __init__(self, dynamic_content, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2,
-                 full_border_size=0, all_contents_border_size=2, main_content_border_size=0, plugin_border_size=0):
+                 full_border_size=0, all_contents_border_size=2, dynamic_content_border_size=0, plugin_border_size=0):
         self.data_manager = DataManager(data_source)
         self.data_manager.load_data()
 
@@ -31,7 +35,7 @@ class DynamicPanel(Panel):
         # Add optional body text above main content under header
         self.body = html.Div([dcc.Markdown(body, mathjax=True)])
 
-        self.dynamic_content = Panel(main_content=dynamic_content, border_size=main_content_border_size)
+        self.dynamic_content = Panel(main_content=dynamic_content, border_size=dynamic_content_border_size)
 
         # Configure plugin related attributes
         self.plugins = plugins

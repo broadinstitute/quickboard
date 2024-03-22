@@ -153,7 +153,7 @@ class Quickboard(html.Div):
             current_tab = self.tab_dict[tab_name]
             sidebar_plugins = current_tab.sidebar_plugins
         else:
-            sidebar_plugins = self.sidebar.plugins if hasattr(self, 'sidebar') else []
+            sidebar_plugins = self.sidebar.plugins if hasattr(self.sidebar, 'plugins') else []
 
         controls = [plugin for plugin in sidebar_plugins if hasattr(plugin, 'control')]
         serialized_controls = [c.serialize() for c in controls]

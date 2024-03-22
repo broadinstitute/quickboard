@@ -8,6 +8,7 @@ class DataFilterChecklist(Checklist):
         data_col = column from data to check for values in checklist
         data_values = list of possible values to populate the checklist
         header = header text/object
+        toggle_all_button = determines whether to include a "toggle all" button with checklist
     """
     def __init__(self, data_col, data_values, header="", toggle_all_button=True):
         super().__init__(
