@@ -528,5 +528,5 @@ board = qbb.Quickboard(
     ]
 )
 
-start_app(board, mode="external", port=8050)    # Note: Remove 'mode' input if running a .py file instead of notebook
+start_app(board, jupyter_mode="external", port=8050)
 ```

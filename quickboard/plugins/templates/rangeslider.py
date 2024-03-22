@@ -23,10 +23,12 @@ class RangeSlider(ControlPlugin):
                  slider_marks={}, tooltip={}, updatemode='mouseup', edges_infinite=False, header=""):
         component = dcc.RangeSlider
 
+        default_values = slider_default_values if slider_default_values is not None else [slider_min, slider_max]
+
         component_inputs = {
             'min': slider_min,
             'max': slider_max,
-            'value': slider_default_values,
+            'value': default_values,
             'step': slider_step,
             'included': True,
             'marks': slider_marks,

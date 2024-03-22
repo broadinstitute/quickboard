@@ -21,3 +21,4 @@ class Panel(html.Div):
 
     def update_border_size(self, size):
         self.style = self.style | {"border-width": f"{size}px"}
+        return self

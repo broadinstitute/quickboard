@@ -21,10 +21,12 @@ class Slider(ControlPlugin):
                  slider_marks={}, tooltip={}, updatemode='mouseup', header=""):
         component = dcc.Slider
 
+        default_value = slider_default_value if slider_default_value is not None else slider_max
+
         component_inputs = {
             'min': slider_min,
             'max': slider_max,
-            'value': slider_default_value,
+            'value': default_value,
             'step': slider_step,
             'included': True,
             'marks': slider_marks,

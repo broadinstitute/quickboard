@@ -26,7 +26,7 @@ class Quickboard(html.Div):
 
         self.children = [
                 self.sidebar,
-                self.content_list,
+                html.Div(self.content_list),
                 self.tabs_wrapper
             ]
 
