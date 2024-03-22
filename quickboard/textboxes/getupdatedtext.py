@@ -1,7 +1,5 @@
-from dash import html
+from dash import html, callback
 from dash.dependencies import Input, Output, State, ALL
-
-from quickboard.dashsetup import app
 
 import pandas as pd
 
@@ -21,7 +19,7 @@ class GetUpdatedText:
         self.start_text = start_text
         self.end_text = end_text
 
-        app.callback(
+        callback(
             Output(self.textbox, 'children'),
             Input(target_component, target_prop)
         )(self.get_update)

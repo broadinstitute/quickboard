@@ -1,7 +1,6 @@
-from dash import dcc, ctx
+from dash import dcc, ctx, callback
 from dash.dependencies import Input, Output, State, ALL
 
-from quickboard.dashsetup import app
 from quickboard.base import DynamicPanel
 
 
@@ -17,10 +16,14 @@ class PlotPanel(DynamicPanel):
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
         plugin_wrap = number of plugins to load per row underneath main object
-        kwargs = extra keyword arguments become attributes of the object for extending functionality easily
+        full_border_size = size of border around entire object
+        all_contents_border_size = size of border around all contents
+        dynamic_content_border_size = size of border around dynamic content
+        plugin_border_size = size of border around plugin group
     """
-    def __init__(self, plotter, plot_inputs, data_source="data", header="", body="",
-                 plugins=[], plugin_wrap=2, **kwargs):
+    def __init__(self, plotter, plot_inputs, data_source="data", header="", body="", plugins=[], plugin_align="bottom",
+                 plugin_wrap=2, full_border_size=0, all_contents_border_size=2, dynamic_content_border_size=0,
+                 plugin_border_size=0):
         # Plot specific attributes
         self.plot_inputs = plot_inputs
         self.plotter = plotter
@@ -28,12 +31,16 @@ class PlotPanel(DynamicPanel):
 
         super().__init__(
             header=header,
-            main_content=self.graph,
+            dynamic_content=self.graph,
             data_source=data_source,
             plugins=plugins,
             body=body,
             plugin_wrap=plugin_wrap,
-            **kwargs
+            plugin_align=plugin_align,
+            full_border_size=full_border_size,
+            all_contents_border_size=all_contents_border_size,
+            dynamic_content_border_size=dynamic_content_border_size,
+            plugin_border_size=plugin_border_size
         )
 
         # Plot update callback
@@ -46,7 +53,7 @@ class PlotPanel(DynamicPanel):
         else:
             interactive_data = Input('data_store', 'data')
 
-        app.callback(
+        callback(
             Output(self.graph, 'figure'),
             Input('data_store', 'data'),
             interactive_data,

@@ -1,9 +1,7 @@
-from dash import dcc
-
-from quickboard.primitives import ControlPlugin
+from quickboard.plugins.templates.slider import Slider
 
 
-class PlotInputSlider(ControlPlugin):
+class PlotInputSlider(Slider):
     """
     A plugin for toggling a plotter's input using a value on a sliding scale.
     Inputs:
@@ -20,23 +18,15 @@ class PlotInputSlider(ControlPlugin):
     """
     def __init__(self, plot_input, slider_min, slider_max, slider_default_value=None, slider_step=None,
                  slider_marks={}, tooltip={}, updatemode='mouseup', header="", **kwargs):
-        component = dcc.Slider
-
-        component_inputs = {
-            'min': slider_min,
-            'max': slider_max,
-            'value': slider_default_value,
-            'step': slider_step,
-            'included': True,
-            'marks': slider_marks,
-            'tooltip': tooltip,
-            'updatemode': updatemode
-        }
-
         super().__init__(
-            header=header,
-            component=component,
-            component_inputs=component_inputs
+            slider_min=slider_min,
+            slider_max=slider_max,
+            slider_default_value=slider_default_value,
+            slider_step=slider_step,
+            slider_marks=slider_marks,
+            tooltip=tooltip,
+            updatemode=updatemode,
+            header=header
         )
 
         self.control_attributes = {

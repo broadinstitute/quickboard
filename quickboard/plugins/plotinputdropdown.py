@@ -1,13 +1,13 @@
-from quickboard.plugins.templates import RadioButtons
+from quickboard.plugins.templates import Dropdown
 
 
-class PlotInputRadioButtons(RadioButtons):
+class PlotInputDropdown(Dropdown):
     """
     A plugin for modifying a PlotPanel's plotting behavior. The `plot_input` value can be dynamically changed based on
-    the selection via radio buttons.
+    the selection via dropdown.
     Inputs:
-        plot_input = name of the PlotPanel's plotter input to be changed by clicking the radio buttons
-        data_values = list of possible values to populate the radio button list
+        plot_input = name of the PlotPanel's plotter input to be changed by selecting from dropdown
+        data_values = list of possible values to populate the dropdown list
         header = header text/object
     """
     def __init__(self, plot_input, data_values, header=""):

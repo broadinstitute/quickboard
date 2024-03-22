@@ -1,9 +1,7 @@
-from dash import dcc
-
-from quickboard.primitives import ControlPlugin
+from quickboard.plugins.templates.rangeslider import RangeSlider
 
 
-class PlotInputRangeSlider(ControlPlugin):
+class PlotInputRangeSlider(RangeSlider):
     """
     A plugin for toggling a plotter's input using a range of values on a sliding scale.
     Inputs:
@@ -19,29 +17,20 @@ class PlotInputRangeSlider(ControlPlugin):
         header = header text/object
     """
     def __init__(self, plot_input, slider_min, slider_max, slider_default_values=None, slider_step=None,
-                 slider_marks={}, tooltip={}, updatemode='mouseup', header="", **kwargs):
-        component = dcc.RangeSlider
-
-        component_inputs = {
-            'min': slider_min,
-            'max': slider_max,
-            'value': slider_default_values,
-            'step': slider_step,
-            'included': True,
-            'marks': slider_marks,
-            'tooltip': tooltip,
-            'updatemode': updatemode
-        }
-
+                 slider_marks={}, tooltip={}, updatemode='mouseup', edges_infinite=False, header=""):
         super().__init__(
-            header=header,
-            component=component,
-            component_inputs=component_inputs
+            slider_min=slider_min,
+            slider_max=slider_max,
+            slider_default_values=slider_default_values,
+            slider_step=slider_step,
+            slider_marks=slider_marks,
+            tooltip=tooltip,
+            updatemode=updatemode,
+            edges_infinite=edges_infinite,
+            header=header
         )
 
-        self.control_attributes = {
-            'plot_input': plot_input,
-        }
+        self.control_attributes = self.control_attributes | {'plot_input': plot_input}
 
     @staticmethod
     def configure(control_attributes, dp, df, control_value):

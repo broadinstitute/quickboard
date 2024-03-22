@@ -1,13 +1,13 @@
-from quickboard.plugins.templates import RadioButtons
+from quickboard.plugins.templates import Dropdown
 
 
-class DataFilterRadioButtons(RadioButtons):
+class DataFilterDropdown(Dropdown):
     """
     A plugin for filtering data to be displayed by removing records where a certain column's value does not equal the
-    selected radio button value.
+    selected dropdown value.
     Inputs:
         data_col = column from data to check for values matching button
-        data_values = list of possible values to populate the radio button list
+        data_values = list of possible values to populate the menu list
         header = header text/object
     """
     def __init__(self, data_col, data_values, header=""):

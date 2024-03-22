@@ -1,4 +1,4 @@
-from dash import html
+from dash import html, dcc
 
 import pandas as pd
 
@@ -13,35 +13,48 @@ class DynamicPanel(Panel):
     """
     A template for creating larger panels holding objects which can be updated via different controls and plugins.
     Inputs:
-        main_content = main HTML object to hold
+        dynamic_content = main HTML object to hold
         data_source = key to use in tab data dictionary to get data inputs for this panel
         header = header text/object
         body = text/objects to present between header and main_content
         plugins = list of plugin objects to load under main_content to use to manipulate main object
-        plugin_wrap = number of plugins to load per row underneath main object
-        kwargs = extra keyword arguments become attributes of the object for extending functionality easily
+        plugin_align = placement of plugins; either bottom, top, left, or right
+        plugin_wrap = number of plugins to load per row in plugin grid
+        full_border_size = size of border around entire object
+        all_contents_border_size = size of border around all contents
+        dynamic_content_border_size = size of border around dynamic content
+        plugin_border_size = size of border around plugin group
     """
-    def __init__(self, main_content, data_source="data", header="", body="", plugins=[], plugin_wrap=2, **kwargs):
-        super().__init__(header, main_content, **kwargs)
+    def __init__(self, dynamic_content, data_source="data", header="", body="", plugins=[], plugin_align="bottom", plugin_wrap=2,
+                 full_border_size=0, all_contents_border_size=2, dynamic_content_border_size=0, plugin_border_size=0):
         self.data_manager = DataManager(data_source)
         self.data_manager.load_data()
 
-        # Add optional body text above main content under header
-        self.body = html.Div([body, html.Br()])
+        self.header = html.H3(header, style=styles.PANEL_HEADER_STYLE) if type(header) == str else header
 
-        self.main_content = html.Div([main_content], style={'border-width': '1px', 'border-style': 'solid',
-                                                            'border-color': 'black'})
+        # Add optional body text above main content under header
+        self.body = html.Div([dcc.Markdown(body, mathjax=True)])
+
+        self.dynamic_content = Panel(main_content=dynamic_content, border_size=dynamic_content_border_size)
 
         # Configure plugin related attributes
         self.plugins = plugins
-        border = False if len(plugins) == 0 else True
-        self.plugin_frame = ContentGrid(header="", content_list=plugins, col_wrap=plugin_wrap, border=border)
+        self.plugin_frame = ContentGrid(header="", content_list=plugins, col_wrap=plugin_wrap, border_size=plugin_border_size)
 
-        self.container = html.Div([
-            self.header, self.body, html.Br(), self.main_content, html.Br(), self.plugin_frame.container
-        ],
-            style=styles.PANEL_STYLE
-        )
+        # Control placement of plugins relative to content
+        assert plugin_align in ["bottom", "top", "left", "right"]
+        full_wrap = 1 if plugin_align == "bottom" or plugin_align == "top" else 2
+        full_content = [self.plugin_frame, self.dynamic_content] if plugin_align in ["top", "left"] else [self.dynamic_content, self.plugin_frame]
+        full_content_widths = [25, 100] if plugin_align == "left" else [100, 25] if plugin_align == "right" else []
+        self.full_content_grid = ContentGrid(header="", content_list=full_content, content_widths=full_content_widths, col_wrap=full_wrap, border_size=all_contents_border_size)
+
+        self.children = [
+            self.header,
+            self.body,
+            html.Br(),
+            self.full_content_grid
+        ]
+        super().__init__(main_content=self.children, border_size=full_border_size)
 
     def data_transform(self, df):
         """

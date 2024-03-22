@@ -1,8 +1,8 @@
-from dash import html
+from dash import html, callback
 from dash import dash_table
-from dash.dependencies import Input, Output, State, ALL
+from dash.dependencies import Input, Output
 
-from quickboard.dashsetup import app
+import pandas as pd
 from quickboard.primitives import Panel
 
 
@@ -14,12 +14,12 @@ class DataDisplay(Panel):
         header = header text/object
         listen = list of control objects to get notified of changes in them
     """
-    def __init__(self, data_source, header="", listen=[], **kwargs):
+    def __init__(self, data_source, header="", listen=[]):
         # Calibrate header based on input and control type
         if isinstance(header, str):
-            header = html.H5(header)
+            self.header = html.H5(header)
         else:
-            header = header
+            self.header = header
 
         self.data_source = data_source
 
@@ -31,9 +31,9 @@ class DataDisplay(Panel):
             style_table={'height': '150px', 'overflow': 'auto', 'overflowX': 'scroll', 'width': '100%'}
         )
 
-        super().__init__(header=header, main_content=self.datatable, **kwargs)
+        super().__init__(main_content=[self.header, self.datatable])
 
-        app.callback(
+        callback(
             Output(self.datatable, 'data'),
             Output(self.datatable, 'columns'),
             Input('data_store', 'data'),

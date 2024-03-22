@@ -1,32 +1,20 @@
-from dash import dcc
-
-from quickboard.primitives import ControlPlugin
+from quickboard.plugins.templates import Checklist
 
 
-class DataFilterChecklist(ControlPlugin):
+class DataFilterChecklist(Checklist):
     """
     A plugin for filtering data to be displayed by removing records where a certain column's value is not in checklist.
     Inputs:
         data_col = column from data to check for values in checklist
         data_values = list of possible values to populate the checklist
         header = header text/object
+        toggle_all_button = determines whether to include a "toggle all" button with checklist
     """
-    def __init__(self, data_col, data_values, header="", **kwargs):
-        component = dcc.Checklist
-        component_inputs = {
-            'options': [
-                {'label': x, 'value': x} for x in data_values
-            ],
-            'value': data_values,
-            'labelStyle': {'display': 'block'},
-            'inputStyle': {"margin-right": '10px'}
-        }
-
+    def __init__(self, data_col, data_values, header="", toggle_all_button=True):
         super().__init__(
+            data_values=data_values,
             header=header,
-            component=component,
-            component_inputs=component_inputs,
-            **kwargs
+            toggle_all_button=toggle_all_button
         )
 
         self.control_attributes = {'data_col': data_col}
